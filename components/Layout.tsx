@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import '../App.css';
 import { Button } from '../styled/Button';
@@ -13,7 +13,11 @@ const RootPage = styled.div`
     min-width: 100vh;
 `;
 
-class Layout extends Component {
+type Props = {
+    isLoggedIn: boolean;
+};
+
+class Layout extends React.PureComponent<Props> {
     render() {
         return (
             <RootPage>
@@ -38,15 +42,18 @@ class Layout extends Component {
                         <Link href="/profile">
                             <NavLink>Profile</NavLink>
                         </Link>
-                        <Button>Sign Up</Button>
-                        <Avatar src="https://pbs.twimg.com/profile_images/1026402265190617089/zMyg2gvB_400x400.jpg" />
+                        {this.props.isLoggedIn ? (
+                            <Avatar src="https://pbs.twimg.com/profile_images/1026402265190617089/zMyg2gvB_400x400.jpg" />
+                        ) : (
+                            <Button>Sign Up</Button>
+                        )}
                     </div>
                 </Header>
                 <div
                     style={{
                         backgroundColor: '#2d3e5d',
-                        paddingTop: '100px',
-                        height: 'calc(100vh - 100px)',
+                        paddingTop: '75px',
+                        height: 'calc(100vh - 75px)',
                         width: '100vw'
                     }}
                 >

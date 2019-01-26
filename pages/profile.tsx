@@ -1,16 +1,16 @@
 import React from 'react';
-import { Hero } from '../styled-components/Hero';
+import { Hero } from '../styled/Hero';
 import styled from 'styled-components';
 
 export const Page = styled.div`
     display: grid;
 `;
 
-export class ExercisesPage extends React.Component {
+export default class ProfilePage extends React.Component {
     render() {
         return (
             <Page>
-                <Hero>Exercises</Hero>
+                <Hero>Profile</Hero>
             </Page>
         );
     }

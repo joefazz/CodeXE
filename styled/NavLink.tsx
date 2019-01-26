@@ -7,4 +7,5 @@ export const NavLink = styled.a`
     color: white;
     font-family: ${fonts.display};
     text-decoration-line: none;
+    cursor: pointer;
 `;

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import io from 'socket.io-client';
 import dynamic from 'next/dynamic';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
     ssr: false
@@ -10,8 +11,8 @@ import { colors, fonts } from '../constants';
 import Layout from '../components/Layout';
 
 enum Languages {
-    JS = 'JavaScript',
-    Python = 'Python',
+    JS = 'javascript',
+    Python = 'python',
     CLang = 'C'
 }
 
@@ -21,12 +22,28 @@ type State = {
     selectedLang: Languages;
 };
 
+const socket = io.connect('http://localhost:4000');
+
 export default class HomePage extends React.Component<{}, State> {
     state = {
         consoleValue: '// Code some JavaScript!\n',
         output: '',
         selectedLang: Languages.JS
     };
+
+    constructor(props: {}) {
+        super(props);
+
+        socket.on('connection', (val: any) => console.log('connected', val));
+
+        socket.on('containers.list', (containers: any) => {
+            console.log(containers);
+        });
+    }
+
+    componentDidMount() {
+        socket.emit('containers.list');
+    }
 
     runCode = () => {
         switch (this.state.selectedLang) {
@@ -70,7 +87,7 @@ export default class HomePage extends React.Component<{}, State> {
 
     render() {
         return (
-            <Layout>
+            <Layout isLoggedIn>
                 <Page>
                     <CodeSection>
                         <H1>Do coding exercises right in your browser!</H1>
@@ -102,9 +119,10 @@ export default class HomePage extends React.Component<{}, State> {
                             options={{
                                 minimap: { enabled: false },
                                 fontSize: 18,
-                                lineNumbers: 'off'
+                                lineNumbers: 'off',
+                                cursorStyle: 'block'
                             }}
-                            language={'typescript'}
+                            language={this.state.selectedLang}
                             onChange={(newVal: string) =>
                                 this.setState({
                                     consoleValue: newVal
@@ -112,18 +130,19 @@ export default class HomePage extends React.Component<{}, State> {
                             }
                             value={this.state.consoleValue}
                         />
-                        <Button
-                            success
-                            onClick={this.runCode}
-                            style={{
-                                fontSize: '1.8rem',
-                                borderTopLeftRadius: 0,
-                                borderTopRightRadius: 0,
-                                marginTop: '15px'
-                            }}
-                        >
-                            Run {this.state.selectedLang}
-                        </Button>
+                        <div>
+                            <Button
+                                success
+                                onClick={this.runCode}
+                                style={{
+                                    fontSize: '1.8rem',
+                                    borderTopLeftRadius: 0,
+                                    borderTopRightRadius: 0
+                                }}
+                            >
+                                Run
+                            </Button>
+                        </div>
                         <CodeOutput>Output: {this.state.output}</CodeOutput>
                     </CodeSection>
                     <InfoSection>
@@ -197,8 +216,9 @@ const Page = styled.div`
     height: 100%;
     grid-gap: 40px 40px;
     grid-template-columns: 120px 1fr 1fr;
-    grid-template-rows: 2fr 2fr 0.6fr 1fr;
+    grid-template-rows: 5px 2fr 2fr 0.6fr 1fr;
     grid-template-areas:
+        '. . .'
         '. demo modules'
         '. demo modules'
         '. demo buttons'
@@ -267,7 +287,7 @@ const Footer = styled.div`
     color: white;
     font-family: ${fonts.body};
     padding: 0 20px;
-    font-size: 32px;
+    font-size: 1.2rem;
 `;
 
 const LanguageWrapper = styled.ul`
