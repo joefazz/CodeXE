@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import io from 'socket.io-client';
 import dynamic from 'next/dynamic';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
     ssr: false
@@ -9,6 +8,9 @@ import { CodeOutput } from '../styled/CodeOutput';
 import { Button } from '../styled/Button';
 import { colors, fonts } from '../constants';
 import Layout from '../components/Layout';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:4000');
 
 enum Languages {
     JS = 'javascript',
@@ -20,29 +22,39 @@ type State = {
     consoleValue: string;
     output: string;
     selectedLang: Languages;
+    containerName: string;
 };
 
-const socket = io.connect('http://localhost:4000');
-
 export default class HomePage extends React.Component<{}, State> {
+    containerInfo: any;
+
     state = {
         consoleValue: '// Code some JavaScript!\n',
         output: '',
-        selectedLang: Languages.JS
+        selectedLang: Languages.JS,
+        containerName: ''
     };
 
-    constructor(props: {}) {
+    constructor(props: any) {
         super(props);
 
         socket.on('connection', (val: any) => console.log('connected', val));
 
-        socket.on('containers.start', (container: any) => {
-            console.log(container);
+        socket.on('containers.start', ({ name, info }: { name: string; info: any }) => {
+            this.setState({ containerName: name });
+            this.containerInfo = info;
         });
+
+        socket.on('container.stop', () => console.log('Stopped'));
     }
 
     componentDidMount() {
-        socket.emit('containers.start');
+        socket.emit('container.start');
+    }
+
+    componentWillUnmount() {
+        console.log(this.containerInfo.Config.Hostname);
+        socket.emit('container.stop', this.containerInfo.Config.Hostname);
     }
 
     runCode = () => {
@@ -62,7 +74,9 @@ export default class HomePage extends React.Component<{}, State> {
                         Accept: 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ code: this.state.consoleValue })
+                    body: JSON.stringify({
+                        code: this.state.consoleValue
+                    })
                 })
                     .then((res) => res.text())
                     .then((text) => this.setState({ output: text }))
@@ -70,7 +84,9 @@ export default class HomePage extends React.Component<{}, State> {
                 break;
 
             default:
-                this.setState({ output: "Sorry this language isn't supported yet!" });
+                this.setState({
+                    output: "Sorry this language isn't supported yet!"
+                });
                 break;
         }
     };
@@ -169,7 +185,8 @@ export default class HomePage extends React.Component<{}, State> {
                             </li>
                             <li>
                                 <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                Run real code on actual machines
+                                Run real virtual machines (You're currently connected to{' '}
+                                {this.state.containerName})
                             </li>
                             <li>
                                 <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
@@ -177,7 +194,7 @@ export default class HomePage extends React.Component<{}, State> {
                             </li>
                             <li>
                                 <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                Don't install a thing
+                                No set up required
                             </li>
                         </FeatureArea>
                         {/* <FeatureArea>
