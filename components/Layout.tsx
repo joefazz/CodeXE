@@ -13,6 +13,46 @@ const RootPage = styled.div`
     min-width: 100vh;
 `;
 
+const LeftWrapper = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 40%;
+`;
+
+const StatusWrapper = styled.div`
+    background-color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    border-radius: 5px;
+    margin-left: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 5px;
+    border: 1px solid white;
+`;
+
+const ContainerStatus = styled.div`
+    margin-left: 5px;
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    background-color: ${(props: { color: string }) => props.color};
+    animation: radar infinite 5s linear;
+
+    @keyframes radar {
+        0% {
+            box-shadow: 0px 0px 0px ${(props: { color: string }) => props.color};
+        }
+        50% {
+            box-shadow: 0px 0px 5px ${(props: { color: string }) => props.color};
+        }
+        100% {
+            box-shadow: 0px 0px 0px ${(props: { color: string }) => props.color};
+        }
+    }
+`;
+
 type Props = {
     isLoggedIn: boolean;
 };
@@ -22,9 +62,15 @@ class Layout extends React.PureComponent<Props> {
         return (
             <RootPage>
                 <Header>
-                    <Link href="/">
-                        <Logo>OpenStudy</Logo>
-                    </Link>
+                    <LeftWrapper>
+                        <Link href="/">
+                            <Logo>OpenStudy</Logo>
+                        </Link>
+                        <StatusWrapper>
+                            <span style={{ paddingTop: '2px' }}>Connection Status:</span>{' '}
+                            <ContainerStatus color={'green'} />
+                        </StatusWrapper>
+                    </LeftWrapper>
                     <div
                         style={{
                             display: 'flex',

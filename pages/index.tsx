@@ -36,13 +36,13 @@ export default class HomePage extends React.Component<{}, State> {
 
         socket.on('connection', (val: any) => console.log('connected', val));
 
-        socket.on('containers.list', (containers: any) => {
-            console.log(containers);
+        socket.on('containers.start', (container: any) => {
+            console.log(container);
         });
     }
 
     componentDidMount() {
-        socket.emit('containers.list');
+        socket.emit('containers.start');
     }
 
     runCode = () => {
