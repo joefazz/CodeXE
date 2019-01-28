@@ -42,13 +42,13 @@ const ContainerStatus = styled.div`
 
     @keyframes radar {
         0% {
-            box-shadow: 0px 0px 0px ${(props: { color: string }) => props.color};
+            box-shadow: 0px 0px 2px ${(props: { color: string }) => props.color};
         }
         50% {
-            box-shadow: 0px 0px 5px ${(props: { color: string }) => props.color};
+            box-shadow: 0px 0px 7px ${(props: { color: string }) => props.color};
         }
         100% {
-            box-shadow: 0px 0px 0px ${(props: { color: string }) => props.color};
+            box-shadow: 0px 0px 2px ${(props: { color: string }) => props.color};
         }
     }
 `;
