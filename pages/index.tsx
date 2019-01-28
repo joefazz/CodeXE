@@ -53,11 +53,13 @@ export default class HomePage extends React.Component<{}, State> {
     }
 
     componentWillUnmount() {
-        console.log(this.containerInfo.Config.Hostname);
         socket.emit('container.stop', this.containerInfo.Config.Hostname);
     }
 
     runCode = () => {
+        // TODO: THIS CODE IS PRETTY OBSELETE NOW ALTHOUGH MAYBE NOT IDK
+        // WAS WRITTEN PRE CONTAINERISATION SO WHO KNOWS
+
         switch (this.state.selectedLang) {
             case Languages.JS:
                 try {
@@ -197,13 +199,6 @@ export default class HomePage extends React.Component<{}, State> {
                                 No set up required
                             </li>
                         </FeatureArea>
-                        {/* <FeatureArea>
-                            <li>Automagically generated exercises</li>
-                            <li>Fully featured code editor</li>
-                            <li>Run real code on actual machines</li>
-                            <li>Learn the basics of some of the most popular languages</li>
-                            <li>Don't install a thing</li>
-                        </FeatureArea> */}
                     </InfoSection>
                     <ButtonArea>
                         <Button raised>Log In</Button>
