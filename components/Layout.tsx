@@ -1,12 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import '../App.css';
+import '../css/App.css';
 import { Button } from '../styled/Button';
 import { Logo } from '../styled/Logo';
 import { Header } from '../styled/Header';
 import { Avatar } from '../styled/Avatar';
 import { NavLink } from '../styled/NavLink';
 import styled from 'styled-components';
+import Popup from 'reactjs-popup';
+import { fonts } from '../constants';
+import { ContainerContext } from '../pages/_app';
 
 const RootPage = styled.div`
     min-height: 100vh;
@@ -30,6 +33,7 @@ const StatusWrapper = styled.div`
     justify-content: center;
     padding: 5px 5px;
     border: 1px solid white;
+    cursor: help;
 `;
 
 const ContainerStatus = styled.div`
@@ -38,26 +42,30 @@ const ContainerStatus = styled.div`
     width: 14px;
     border-radius: 50%;
     background-color: ${(props: { color: string }) => props.color};
-    animation: radar infinite 5s linear;
+    animation: radar infinite 2s linear;
 
     @keyframes radar {
         0% {
-            box-shadow: 0px 0px 2px ${(props: { color: string }) => props.color};
+            box-shadow: 0px 0px 0px ${(props: { color: string }) => props.color};
         }
         50% {
-            box-shadow: 0px 0px 7px ${(props: { color: string }) => props.color};
+            box-shadow: 0px 0px 4px ${(props: { color: string }) => props.color};
         }
         100% {
-            box-shadow: 0px 0px 2px ${(props: { color: string }) => props.color};
+            box-shadow: 0px 0px 0px ${(props: { color: string }) => props.color};
         }
     }
 `;
 
 type Props = {
     isLoggedIn: boolean;
+    status?: 'disconnected' | 'connected';
+    containerName?: string;
 };
 
 class Layout extends React.PureComponent<Props> {
+    static contextType = ContainerContext;
+
     render() {
         return (
             <RootPage>
@@ -66,10 +74,29 @@ class Layout extends React.PureComponent<Props> {
                         <Link href="/">
                             <Logo>OpenStudy</Logo>
                         </Link>
-                        <StatusWrapper>
-                            <span style={{ paddingTop: '2px' }}>Connection Status:</span>{' '}
-                            <ContainerStatus color={'green'} />
-                        </StatusWrapper>
+                        <Popup
+                            trigger={() => (
+                                <StatusWrapper>
+                                    <span style={{ paddingTop: '2px' }}>Connection Status:</span>{' '}
+                                    <ContainerStatus
+                                        color={
+                                            this.context.status === 'disconnected' ? 'red' : 'green'
+                                        }
+                                    />
+                                </StatusWrapper>
+                            )}
+                            contentStyle={{
+                                fontFamily: fonts.display
+                            }}
+                            position={'right center'}
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                {this.context.containerName === ''
+                                    ? 'There was a problem'
+                                    : `Connected to: ${this.context.containerName}`}
+                            </span>
+                        </Popup>
                     </LeftWrapper>
                     <div
                         style={{

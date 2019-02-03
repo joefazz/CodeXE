@@ -2,7 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
+import XTerminal from '../components/Terminal';
 import SplitPane from 'react-split-pane';
+import { ContainerContext } from './_app';
+import { Context } from 'types';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
     ssr: false
 });
@@ -75,9 +78,14 @@ export const Split = styled(SplitPane)`
 `;
 
 export default class SandboxPage extends React.Component {
+    context: Context;
+
     state = {
         codeWidth: '100%'
     };
+
+    static contextType = ContainerContext;
+
     render() {
         return (
             <Layout isLoggedIn={false}>
@@ -96,7 +104,7 @@ export default class SandboxPage extends React.Component {
                         }}
                     />
                     <Split split={'horizontal'} defaultSize="75%">
-                        <Output />
+                        <XTerminal container={this.context.containerID} />
                         <Controls />
                     </Split>
                 </Split>

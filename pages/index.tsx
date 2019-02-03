@@ -8,13 +8,12 @@ import { CodeOutput } from '../styled/CodeOutput';
 import { Button } from '../styled/Button';
 import { colors, fonts } from '../constants';
 import Layout from '../components/Layout';
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:4000');
+import { ContainerContext } from './_app';
+import { Context } from 'types';
 
 enum Languages {
-    JS = 'javascript',
-    Python = 'python',
+    JS = 'JavaScript',
+    Python = 'Python',
     CLang = 'C'
 }
 
@@ -22,75 +21,48 @@ type State = {
     consoleValue: string;
     output: string;
     selectedLang: Languages;
-    containerName: string;
 };
 
 export default class HomePage extends React.Component<{}, State> {
-    containerInfo: any;
+    context: Context;
+
+    static contextType = ContainerContext;
 
     state = {
         consoleValue: '// Code some JavaScript!\n',
         output: '',
-        selectedLang: Languages.JS,
-        containerName: ''
+        selectedLang: Languages.JS
     };
 
-    constructor(props: any) {
-        super(props);
-
-        socket.on('connection', (val: any) => console.log('connected', val));
-
-        socket.on('containers.start', ({ name, info }: { name: string; info: any }) => {
-            this.setState({ containerName: name });
-            this.containerInfo = info;
-        });
-
-        socket.on('container.stop', () => console.log('Stopped'));
-    }
-
-    componentDidMount() {
-        socket.emit('container.start');
-    }
-
-    componentWillUnmount() {
-        socket.emit('container.stop', this.containerInfo.Config.Hostname);
-    }
-
     runCode = () => {
-        // TODO: THIS CODE IS PRETTY OBSELETE NOW ALTHOUGH MAYBE NOT IDK
-        // WAS WRITTEN PRE CONTAINERISATION SO WHO KNOWS
+        let message: { lang: string; command: string; id: string; repl: string } = {
+            id: this.context.containerID,
+            lang: 'js',
+            repl: 'node',
+            command: '3 + 3'
+        };
 
         switch (this.state.selectedLang) {
             case Languages.JS:
-                try {
-                    let result = eval(this.state.consoleValue);
-                    this.setState({ output: result });
-                } catch (e) {
-                    this.setState({ output: '' });
-                }
+                message.lang = 'js';
+                message.repl = 'node';
+                message.command = this.state.consoleValue;
                 break;
             case Languages.Python:
-                fetch(`http://localhost:4000/python`, {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        code: this.state.consoleValue
-                    })
-                })
-                    .then((res) => res.text())
-                    .then((text) => this.setState({ output: text }))
-                    .catch((err) => console.log(err));
+                message.repl = 'python3';
+                message.lang = 'py';
+                message.command = this.state.consoleValue;
                 break;
 
             default:
                 this.setState({
                     output: "Sorry this language isn't supported yet!"
                 });
+                return;
                 break;
         }
+
+        this.context.socket.send(JSON.stringify({ type: 'Container.Exec', data: message }));
     };
 
     switchLanguage = (language: Languages) => {
@@ -161,21 +133,24 @@ export default class HomePage extends React.Component<{}, State> {
                                 Run
                             </Button>
                         </div>
-                        <CodeOutput>Output: {this.state.output}</CodeOutput>
+                        <CodeOutput>
+                            {this.context.containerName}: {this.context.response.readableData}
+                        </CodeOutput>
                     </CodeSection>
                     <InfoSection>
                         <img src={'/static/svgs/Moon.svg'} alt="logo" className="App-logo" />
                         <FeatureArea>
                             <div
                                 style={{
-                                    marginTop: '10%',
-                                    shapeOutside: 'circle(50%)',
-                                    height: '30vh',
-                                    width: '30vh',
+                                    marginTop: '9%',
+                                    shapeOutside: 'circle(40%)',
+                                    height: '35vh',
+                                    width: '35vh',
                                     float: 'left',
                                     textAlign: 'right'
                                 }}
                             />
+                            <br />
                             <li>
                                 <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
                                 Automagically generated exercises
@@ -187,8 +162,7 @@ export default class HomePage extends React.Component<{}, State> {
                             </li>
                             <li>
                                 <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                Run real virtual machines (You're currently connected to{' '}
-                                {this.state.containerName})
+                                Interact with a full Linux Virtual Machine
                             </li>
                             <li>
                                 <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
@@ -239,7 +213,7 @@ const Page = styled.div`
 `;
 
 const EmojiListIcon = styled.img`
-    width: 25px;
+    width: 3.3%;
     margin-right: 4px;
 `;
 
@@ -271,7 +245,7 @@ const FeatureArea = styled.ul`
         color: white;
         font-family: ${fonts.body};
         margin-top: 2.2%;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
     }
 `;
 
