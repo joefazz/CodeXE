@@ -12,8 +12,8 @@ import { ContainerContext } from './_app';
 import { Context } from 'types';
 
 enum Languages {
-    JS = 'JavaScript',
-    Python = 'Python',
+    JS = 'javascript',
+    Python = 'python',
     CLang = 'C'
 }
 
