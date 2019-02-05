@@ -11,6 +11,7 @@ Terminal.applyAddon(fit);
 
 type Props = {
     container: string;
+    // termHeight: number;
 };
 
 export default class XTerminal extends React.Component<Props> {
@@ -43,17 +44,9 @@ export default class XTerminal extends React.Component<Props> {
 
         this.term.open(document.querySelector(`#${this.elementId}`));
 
-        this.term.writeln('Ayy baby terminal here but where the connection fam');
-
         // @ts-ignore
         this.term.fit();
         this.term.focus();
-
-        listenToWindowResize(() => {
-            // @ts-ignore
-            this.term.fit();
-        });
-        // this.term.fit();
 
         // this.term.decreaseFontSize = () => {
         //     this.term.setOption('fontSize', --this.fontSize);
@@ -65,7 +58,6 @@ export default class XTerminal extends React.Component<Props> {
         // };
 
         this.term.textarea.onkeydown = (e) => {
-            console.log(e.keyCode, e.shiftKey, e.ctrlKey, e.altKey);
             // ctrl + shift + metakey + +
             if ((e.keyCode === 187 || e.keyCode === 61) && e.shiftKey && e.ctrlKey && e.altKey) {
                 this.term.setOption('fontSize', ++this.fontSize);
@@ -88,6 +80,13 @@ export default class XTerminal extends React.Component<Props> {
         this._connectToSocket();
     }
 
+    // componentDidUpdate(prevProps: Props) {
+    //     if (prevProps.termHeight !== this.props.termHeight) {
+    //         // @ts-ignore
+    //         this.term.fit();
+    //     }
+    // }
+
     componentWillUnmount() {
         clearTimeout(this.interval);
     }
@@ -101,7 +100,8 @@ export default class XTerminal extends React.Component<Props> {
                     top: 0,
                     left: 0,
                     width: '100%',
-                    height: '100%'
+                    height: '100%',
+                    backgroundColor: 'black'
                 }}
             />
         );
@@ -113,31 +113,24 @@ export default class XTerminal extends React.Component<Props> {
         this.streamSocket.onopen = () => {
             // @ts-ignore
             this.term.attach(this.streamSocket, true);
-            this.term.writeln('Attached to Socket');
+            this.term.writeln('Connected to Terminal!');
+            this.term.writeln(
+                `Please note this is a slim version of linux with certain commands restricted!`
+            );
+            this.term.writeln(
+                'If you want to save your work, Git is installed so I recommend making a repo and pushing to it 🙂'
+            );
+            this.term.writeln(`Press 'Enter' to start`);
         };
         this.streamSocket.onclose = () => {
+            this.term.clear();
             this.term.writeln('Server disconnected!');
             // this._connectToSocket();
         };
         this.streamSocket.onerror = () => {
+            this.term.clear();
             this.term.writeln('Server disconnected!');
             // this._connectToSocket();
         };
     }
-}
-
-function listenToWindowResize(callback: () => void) {
-    var resizeTimeout: any;
-
-    function resizeThrottler() {
-        // ignore resize events as long as an actualResizeHandler execution is in the queue
-        if (!resizeTimeout) {
-            resizeTimeout = setTimeout(function() {
-                resizeTimeout = null;
-                callback();
-            }, 66);
-        }
-    }
-
-    window.addEventListener('resize', resizeThrottler, false);
 }

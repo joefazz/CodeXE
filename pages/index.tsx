@@ -9,17 +9,11 @@ import { Button } from '../styled/Button';
 import { colors, fonts } from '../constants';
 import Layout from '../components/Layout';
 import { ContainerContext } from './_app';
-import { Context } from 'types';
-
-enum Languages {
-    JS = 'javascript',
-    Python = 'python',
-    CLang = 'C'
-}
+import { Context, Languages } from '../types';
+import { runCode } from '../functions/run_code';
 
 type State = {
     consoleValue: string;
-    output: string;
     selectedLang: Languages;
 };
 
@@ -30,48 +24,23 @@ export default class HomePage extends React.Component<{}, State> {
 
     state = {
         consoleValue: '// Code some JavaScript!\n',
-        output: '',
         selectedLang: Languages.JS
     };
 
-    runCode = () => {
-        let message: { lang: string; command: string; id: string; repl: string } = {
-            id: this.context.containerID,
-            lang: 'js',
-            repl: 'node',
-            command: '3 + 3'
-        };
-
-        switch (this.state.selectedLang) {
-            case Languages.JS:
-                message.lang = 'js';
-                message.repl = 'node';
-                message.command = this.state.consoleValue;
-                break;
-            case Languages.Python:
-                message.repl = 'python3';
-                message.lang = 'py';
-                message.command = this.state.consoleValue;
-                break;
-
-            default:
-                this.setState({
-                    output: "Sorry this language isn't supported yet!"
-                });
-                return;
-                break;
-        }
-
-        this.context.socket.send(JSON.stringify({ type: 'Container.Exec', data: message }));
-    };
-
     switchLanguage = (language: Languages) => {
+        const consoleValue =
+            language === Languages.JS
+                ? '// Enter some JavaScript'
+                : language === Languages.PYTHON
+                ? '# Enter some Python'
+                : '// Enter some C';
+
+        // this.context.socket.send(
+        //     JSON.stringify({ type: 'Code.Read', id: this.context.containerID, file })
+        // );
         this.setState({
             selectedLang: language,
-            consoleValue:
-                language === Languages.Python
-                    ? '# Code some Python\n'
-                    : `// Code some ${language}\n`
+            consoleValue
         });
     };
 
@@ -91,9 +60,9 @@ export default class HomePage extends React.Component<{}, State> {
                             >
                                 JavaScript
                             </li>
-                            <li onClick={() => this.switchLanguage(Languages.Python)}>Python</li>
+                            <li onClick={() => this.switchLanguage(Languages.PYTHON)}>Python</li>
                             <li
-                                onClick={() => this.switchLanguage(Languages.CLang)}
+                                onClick={() => this.switchLanguage(Languages.C)}
                                 style={{
                                     borderRight: 'none',
                                     borderTopRightRadius: '5px',
@@ -113,17 +82,20 @@ export default class HomePage extends React.Component<{}, State> {
                                 cursorStyle: 'block'
                             }}
                             language={this.state.selectedLang}
-                            onChange={(newVal: string) =>
-                                this.setState({
-                                    consoleValue: newVal
-                                })
-                            }
+                            onChange={(newVal: string) => this.setState({ consoleValue: newVal })}
                             value={this.state.consoleValue}
                         />
                         <div>
                             <Button
                                 success
-                                onClick={this.runCode}
+                                onClick={() =>
+                                    runCode({
+                                        id: this.context.id,
+                                        code: this.state.consoleValue,
+                                        language: this.state.selectedLang,
+                                        socket: this.context.socket
+                                    })
+                                }
                                 style={{
                                     fontSize: '1.8rem',
                                     borderTopLeftRadius: 0,
@@ -134,7 +106,7 @@ export default class HomePage extends React.Component<{}, State> {
                             </Button>
                         </div>
                         <CodeOutput>
-                            {this.context.containerName}: {this.context.response.readableData}
+                            {this.context.containerName}: {this.context.response.writeData}
                         </CodeOutput>
                     </CodeSection>
                     <InfoSection>

@@ -1,6 +1,7 @@
 import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
+import { MessageTypes } from '../types';
 
 export const ContainerContext = React.createContext({});
 
@@ -18,7 +19,7 @@ export default class MyApp extends App {
         return { pageProps };
     }
 
-    state = { status: 'disconnected', containerName: '', containerID: '', response: {} };
+    state = { status: 'disconnected', containerName: '', id: '', response: {} };
 
     componentDidMount() {
         this.socket = new WebSocket('ws://localhost:4000/');
@@ -31,27 +32,28 @@ export default class MyApp extends App {
         this.socket.onmessage = (event) => {
             console.log('Message Recieved!');
 
-            const { type, data } = JSON.parse(event.data);
+            const { type, data }: { type: MessageTypes; data: any } = JSON.parse(event.data);
             console.log(data);
 
             switch (type) {
-                case 'INIT':
-                    console.log('recieved init event');
-                    break;
-                case 'Container.Start':
+                case MessageTypes.CONTAINER_START:
                     console.log('Container Started');
                     const { name, info } = data;
                     this.setState({
                         containerName: name,
                         status: 'connected',
-                        containerID: info.Config.Hostname
+                        id: info.Config.Hostname
                     });
                     break;
-                case 'Container.Exec':
+                case MessageTypes.CONTAINER_EXEC:
                     console.log('Execution returned');
-                    this.setState({ response: { readableData: data } });
+                    this.setState({ response: { writeData: data } });
                     break;
-                case 'Container.Stop':
+                case MessageTypes.CONTAINER_READ:
+                    console.log('Code read');
+                    this.setState({ response: { readData: data } });
+                    break;
+                case MessageTypes.CONTAINER_STOP:
                     console.log('stopped container');
                     break;
                 default:
@@ -79,7 +81,7 @@ export default class MyApp extends App {
                 <Head>
                     <title>OpenStudy</title>
                     <link
-                        href="https://fonts.googleapis.com/css?family=Josefin+Sans|Raleway|Arvo"
+                        href="https://fonts.googleapis.com/css?family=Josefin+Sans|Arvo"
                         rel="stylesheet"
                     />
                     <link
