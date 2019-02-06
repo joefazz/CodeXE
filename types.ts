@@ -1,6 +1,6 @@
 export type Context = {
     id: string; // Container ID
-    status: 'connected' | 'disconneted';
+    status: 'connected' | 'disconnected';
     socket: WebSocket;
     response: {
         readableData: string;
