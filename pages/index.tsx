@@ -6,6 +6,7 @@ const Monaco: any = dynamic(import('../components/Monaco') as any, {
 });
 import { CodeOutput } from '../styled/CodeOutput';
 import { Button } from '../styled/Button';
+import { Footer } from '../styled/Footer';
 import { colors, fonts } from '../constants';
 import Layout from '../components/Layout';
 import { ContainerContext } from './_app';
@@ -106,7 +107,11 @@ export default class HomePage extends React.Component<{}, State> {
                             </Button>
                         </div>
                         <CodeOutput>
-                            {this.context.containerName}: {this.context.response.writeData}
+                            {this.context.containerName === ''
+                                ? 'Disconnected'
+                                : this.context.containerName +
+                                  ': ' +
+                                  this.context.response.writeData}
                         </CodeOutput>
                     </CodeSection>
                     <InfoSection>
@@ -231,21 +236,6 @@ const ButtonArea = styled.div`
         width: 45%;
         font-size: 1.7rem;
     }
-`;
-
-const Footer = styled.div`
-    grid-area: footer;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    background: ${colors.backgroundDarkTranslucent};
-
-    border-top-left-radius: 9px;
-    color: white;
-    font-family: ${fonts.body};
-    padding: 0 20px;
-    font-size: 1.2rem;
 `;
 
 const LanguageWrapper = styled.ul`

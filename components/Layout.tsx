@@ -1,4 +1,4 @@
-import React, { useContext, ReactChildren } from 'react';
+import React, { useContext, ReactChild } from 'react';
 import Link from 'next/link';
 import '../css/App.css';
 import { Button } from '../styled/Button';
@@ -60,7 +60,7 @@ const ContainerStatus = styled.div`
 
 type Props = {
     isLoggedIn: boolean;
-    children: ReactChildren;
+    children: ReactChild;
 };
 
 /**
