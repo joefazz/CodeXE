@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
-import { Footer } from '../styled/Footer';
 import { colors, fonts } from '../constants';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
     ssr: false
@@ -13,34 +12,75 @@ import { Context } from '../types';
 
 const Page = styled.div`
     display: grid;
+    gap: 30px 10px;
     height: 100%;
     width: 100%;
-    gap: 30px 10px;
     grid-template-areas:
-        'hero hero hero .'
+        'header header header header'
         'list list list list'
         'tutorial code output .'
-        '. footer footer footer';
-    grid-template-columns: 1fr 2fr 2fr 120px;
-    grid-template-rows: 2fr 2fr 4fr 1fr;
+        '. . . .';
+    grid-template-columns: 1fr 2fr 2fr 20px;
+    grid-template-rows: 0.7fr 2fr 3fr 10px;
     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
+`;
+
+const Header = styled.header`
+    grid-area: header;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-direction: row;
 `;
 
 const Hero = styled.section`
     grid-area: hero;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: ${colors.backgroundDarkTranslucent};
     font-family: ${fonts.display};
     color: white;
-    font-size: 2rem;
+    font-size: 3rem;
+    border-bottom-right-radius: 5px;
+    padding: 0 7px;
+`;
+
+const Info = styled.span`
+    background-color: ${colors.backgroundDarkTranslucent};
+    font-family: ${fonts.body};
+    font-size: 1.3rem;
+    color: white;
+    margin-top: 20px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 7px 9px;
 `;
 
 const List = styled.section`
     grid-area: list;
-    background-color: ${colors.backgroundDark};
+    /* background: url('/static/images/python_code.jpg') no-repeat center fixed; */
+    /* background-color: paleturquoise; */
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+    box-shadow: 0 5px 12px black;
+    animation: color linear 20s infinite;
+
+    @keyframes color {
+        0% {
+            background-color: paleturquoise;
+        }
+        50% {
+            background-color: palegoldenrod;
+        }
+        100% {
+            background-color: paleturquoise;
+        }
+    }
 `;
 
 const Tutorial = styled.article`
@@ -49,6 +89,8 @@ const Tutorial = styled.article`
     background-color: ${colors.backgroundDarkTranslucent};
     color: white;
     font-size: 1.3rem;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 `;
 
 const Code = styled.div`
@@ -71,11 +113,80 @@ function Exercises() {
     return (
         <Layout isLoggedIn={false}>
             <Page>
-                <Hero>Exercises</Hero>
+                <Header>
+                    <Hero>Exercises</Hero>
+                    <Info>
+                        Learn a new langugage with one of our pre made exercises, or, make your own
+                        to share!
+                    </Info>
+                </Header>
                 <List>
-                    <ExerciseCard>aosjdfoi</ExerciseCard>
-                    <ExerciseCard>aosjdfoi</ExerciseCard>
-                    <ExerciseCard>aosjdfoi</ExerciseCard>
+                    <ExerciseCard>
+                        <div>
+                            <WindowButtonWrapper>
+                                <WindowButton color="#fc5753" />
+                                <WindowButton color="#fdbc40" />
+                                <WindowButton color="#34c748" />
+                            </WindowButtonWrapper>
+                            <span>Python 101</span>
+                        </div>
+                        <ExerciseDescription>
+                            <ul style={{ listStyle: 'none' }}>
+                                <li>> Python?!</li>
+                                <li>> Is there a snake?</li>
+                                <li>> I hate snakes!</li>
+                            </ul>
+                        </ExerciseDescription>
+                    </ExerciseCard>
+                    <ExerciseCard>
+                        <div>
+                            <WindowButtonWrapper>
+                                <WindowButton color="#fc5753" />
+                                <WindowButton color="#fdbc40" />
+                                <WindowButton color="#34c748" />
+                            </WindowButtonWrapper>
+                            <span>C++ Pointers</span>
+                        </div>
+                        <ExerciseDescription>
+                            <ul style={{ listStyle: 'none' }}>
+                                <li>> What is a Pointer?</li>
+                                <li>> Sorry what?</li>
+                                <li>> Still don't get it</li>
+                            </ul>
+                        </ExerciseDescription>
+                    </ExerciseCard>
+                    <ExerciseCard>
+                        <div>
+                            <WindowButtonWrapper>
+                                <WindowButton color="#fc5753" />
+                                <WindowButton color="#fdbc40" />
+                                <WindowButton color="#34c748" />
+                            </WindowButtonWrapper>
+                            <span>NodeJS in Anger</span>
+                        </div>
+                        <ExerciseDescription>
+                            <ul style={{ listStyle: 'none' }}>
+                                <li>> What is Node?</li>
+                                <li>> Building a Server</li>
+                                <li>> Advanced Concepts</li>
+                            </ul>
+                        </ExerciseDescription>
+                    </ExerciseCard>
+                    <ExerciseCard>
+                        <div>
+                            <WindowButtonWrapper>
+                                <WindowButton color="#fc5753" />
+                                <WindowButton color="#fdbc40" />
+                                <WindowButton color="#34c748" />
+                            </WindowButtonWrapper>
+                            <span>Create Exercise</span>
+                        </div>
+                        <ExerciseDescription>
+                            <ul style={{ listStyle: 'none' }}>
+                                <li>> Your Exercise Here!</li>
+                            </ul>
+                        </ExerciseDescription>
+                    </ExerciseCard>
                 </List>
                 <Tutorial>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis natus ipsa
@@ -101,7 +212,7 @@ function Exercises() {
                 <Output>
                     <XTerminal container={container.id} />
                 </Output>
-                <Footer>This is a footer which will defo have content in it one day</Footer>
+                {/* <Footer>This is a footer which will defo have content in it one day</Footer> */}
             </Page>
         </Layout>
     );
@@ -109,9 +220,62 @@ function Exercises() {
 
 const ExerciseCard = styled.div`
     width: 200px;
-    height: 90%;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 85%;
     box-shadow: 2px 2px 5px black;
+    margin-right: 20px;
+    background-color: ${colors.mainBlue};
+    transition: box-shadow 0.3s;
+    border-radius: 5px;
+    cursor: pointer;
+
+    :hover {
+        box-shadow: 5px 5px 8px black;
+    }
+
+    div {
+        display: flex;
+        color: white;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background-color: ${colors.backgroundDark};
+        font-family: ${fonts.body};
+        font-size: 1rem;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        padding: 5px 5px;
+    }
+`;
+
+const WindowButtonWrapper = styled.section`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`;
+
+const WindowButton = styled.i`
+    background-color: ${(props) => props.color};
+    border-radius: 50%;
+    margin-right: 3px;
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 1px ${(props) => props.color};
+`;
+
+const ExerciseDescription = styled.code`
+    color: white;
+    padding-left: 10px;
+    font-size: 0.9rem;
+    ul {
+        padding: 0;
+
+        li {
+            margin: 3px 0;
+        }
+    }
 `;
 
 export default Exercises;
