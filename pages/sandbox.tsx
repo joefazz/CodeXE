@@ -4,14 +4,16 @@ import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
 import XTerminal from '../components/Terminal';
-import SplitPane from 'react-split-pane';
 import { ContainerContext } from './_app';
 import { Context, Languages } from '../types';
 import { colors } from '../constants';
 import { Button } from '../styled/Button';
 import { runCode } from '../functions/run_code';
+import LoadingCode from '../components/LoadingCode';
+import { Split } from '../styled/Split';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
-    ssr: false
+    ssr: false,
+    loading: LoadingCode
 });
 
 const Controls = styled.div`
@@ -30,59 +32,6 @@ const ControlArea = styled.div`
     flex-direction: column;
     align-items: stretch;
     height: 100%;
-`;
-
-const Split = styled(SplitPane)`
-    height: calc(100% - 75px) !important;
-    .Resizer {
-        background: white;
-        opacity: 0.2;
-        z-index: 1;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        -moz-background-clip: padding;
-        -webkit-background-clip: padding;
-        background-clip: padding-box;
-    }
-
-    .Resizer:hover {
-        -webkit-transition: all 2s ease;
-        transition: all 2s ease;
-    }
-
-    .Resizer.horizontal {
-        height: 11px;
-        margin: -5px 0;
-        border-top: 5px solid rgba(255, 255, 255, 0);
-        border-bottom: 5px solid rgba(255, 255, 255, 0);
-        cursor: row-resize;
-        width: 100%;
-    }
-
-    .Resizer.horizontal:hover {
-        border-top: 5px solid rgba(255, 255, 255, 0.5);
-        border-bottom: 5px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .Resizer.vertical {
-        width: 11px;
-        margin: 0 -5px;
-        border-left: 5px solid rgba(255, 255, 255, 0);
-        border-right: 5px solid rgba(255, 255, 255, 0);
-        cursor: col-resize;
-    }
-
-    .Resizer.vertical:hover {
-        border-left: 5px solid rgba(255, 255, 255, 0.5);
-        border-right: 5px solid rgba(255, 255, 255, 0.5);
-    }
-    .Resizer.disabled {
-        cursor: not-allowed;
-    }
-    .Resizer.disabled:hover {
-        border-color: transparent;
-    }
 `;
 
 type State = {

@@ -20,5 +20,6 @@ export enum MessageTypes {
     CONTAINER_START = 'Container.Start',
     CONTAINER_EXEC = 'Container.Exec',
     CONTAINER_READ = 'Container.Read',
-    CONTAINER_STOP = 'Container.Stop'
+    CONTAINER_STOP = 'Container.Stop',
+    EXERCISE_START = 'Exercise.Start'
 }

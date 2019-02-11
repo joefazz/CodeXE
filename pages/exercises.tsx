@@ -3,12 +3,16 @@ import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import { colors, fonts } from '../constants';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
-    ssr: false
+    ssr: false,
+    loading: LoadingCode
 });
 import Layout from '../components/Layout';
 import XTerminal from '../components/Terminal';
 import { ContainerContext } from './_app';
 import { Context } from '../types';
+import LoadingCode from '../components/LoadingCode';
+import Modal from '../components/Modal';
+import Link from 'next/link';
 
 const Page = styled.div`
     display: grid;
@@ -16,12 +20,12 @@ const Page = styled.div`
     height: 100%;
     width: 100%;
     grid-template-areas:
-        'header header header header'
         'list list list list'
+        'header header header header'
         'tutorial code output .'
         '. . . .';
     grid-template-columns: 1fr 2fr 2fr 20px;
-    grid-template-rows: 0.7fr 2fr 3fr 10px;
+    grid-template-rows: 2fr 0.7fr 3fr 10px;
     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
 `;
 
@@ -44,8 +48,10 @@ const Hero = styled.section`
     font-family: ${fonts.display};
     color: white;
     font-size: 3rem;
+    border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     padding: 0 7px;
+    /* box-shadow: 2px 3px 4px black; */
 `;
 
 const Info = styled.span`
@@ -61,26 +67,12 @@ const Info = styled.span`
 
 const List = styled.section`
     grid-area: list;
-    /* background: url('/static/images/python_code.jpg') no-repeat center fixed; */
-    /* background-color: paleturquoise; */
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     box-shadow: 0 5px 12px black;
-    animation: color linear 20s infinite;
-
-    @keyframes color {
-        0% {
-            background-color: paleturquoise;
-        }
-        50% {
-            background-color: palegoldenrod;
-        }
-        100% {
-            background-color: paleturquoise;
-        }
-    }
+    background-color: ${colors.backgroundDarkTranslucent};
 `;
 
 const Tutorial = styled.article`
@@ -121,72 +113,74 @@ function Exercises() {
                     </Info>
                 </Header>
                 <List>
-                    <ExerciseCard>
-                        <div>
-                            <WindowButtonWrapper>
-                                <WindowButton color="#fc5753" />
-                                <WindowButton color="#fdbc40" />
-                                <WindowButton color="#34c748" />
-                            </WindowButtonWrapper>
-                            <span>Python 101</span>
-                        </div>
-                        <ExerciseDescription>
-                            <ul style={{ listStyle: 'none' }}>
-                                <li>> Python?!</li>
-                                <li>> Is there a snake?</li>
-                                <li>> I hate snakes!</li>
-                            </ul>
-                        </ExerciseDescription>
-                    </ExerciseCard>
-                    <ExerciseCard>
-                        <div>
-                            <WindowButtonWrapper>
-                                <WindowButton color="#fc5753" />
-                                <WindowButton color="#fdbc40" />
-                                <WindowButton color="#34c748" />
-                            </WindowButtonWrapper>
-                            <span>C++ Pointers</span>
-                        </div>
-                        <ExerciseDescription>
-                            <ul style={{ listStyle: 'none' }}>
-                                <li>> What is a Pointer?</li>
-                                <li>> Sorry what?</li>
-                                <li>> Still don't get it</li>
-                            </ul>
-                        </ExerciseDescription>
-                    </ExerciseCard>
-                    <ExerciseCard>
-                        <div>
-                            <WindowButtonWrapper>
-                                <WindowButton color="#fc5753" />
-                                <WindowButton color="#fdbc40" />
-                                <WindowButton color="#34c748" />
-                            </WindowButtonWrapper>
-                            <span>NodeJS in Anger</span>
-                        </div>
-                        <ExerciseDescription>
-                            <ul style={{ listStyle: 'none' }}>
-                                <li>> What is Node?</li>
-                                <li>> Building a Server</li>
-                                <li>> Advanced Concepts</li>
-                            </ul>
-                        </ExerciseDescription>
-                    </ExerciseCard>
-                    <ExerciseCard>
-                        <div>
-                            <WindowButtonWrapper>
-                                <WindowButton color="#fc5753" />
-                                <WindowButton color="#fdbc40" />
-                                <WindowButton color="#34c748" />
-                            </WindowButtonWrapper>
-                            <span>Create Exercise</span>
-                        </div>
-                        <ExerciseDescription>
-                            <ul style={{ listStyle: 'none' }}>
-                                <li>> Your Exercise Here!</li>
-                            </ul>
-                        </ExerciseDescription>
-                    </ExerciseCard>
+                    <Link href="/activity?id=0">
+                        <ExerciseCard>
+                            <div>
+                                <WindowButtonWrapper>
+                                    <WindowButton color="#fc5753" />
+                                    <WindowButton color="#fdbc40" />
+                                    <WindowButton color="#34c748" />
+                                </WindowButtonWrapper>
+                                <span>Python 101</span>
+                            </div>
+                            <ExerciseDescription>
+                                <ul style={{ listStyle: 'none' }}>
+                                    <li>> Python?!</li>
+                                    <li>> Is there a snake?</li>
+                                    <li>> I hate snakes!</li>
+                                </ul>
+                            </ExerciseDescription>
+                        </ExerciseCard>
+                    </Link>
+                    <Link href="/activity?id=1">
+                        <ExerciseCard>
+                            <div>
+                                <WindowButtonWrapper>
+                                    <WindowButton color="#fc5753" />
+                                    <WindowButton color="#fdbc40" />
+                                    <WindowButton color="#34c748" />
+                                </WindowButtonWrapper>
+                                <span>C++ Pointers</span>
+                            </div>
+                            <ExerciseDescription>
+                                <ul style={{ listStyle: 'none' }}>
+                                    <li>> What is a Pointer?</li>
+                                    <li>> Sorry what?</li>
+                                    <li>> Still don't get it</li>
+                                </ul>
+                            </ExerciseDescription>
+                        </ExerciseCard>
+                    </Link>
+                    <Link href="/activity?id=2">
+                        <ExerciseCard>
+                            <div>
+                                <WindowButtonWrapper>
+                                    <WindowButton color="#fc5753" />
+                                    <WindowButton color="#fdbc40" />
+                                    <WindowButton color="#34c748" />
+                                </WindowButtonWrapper>
+                                <span>NodeJS in Anger</span>
+                            </div>
+                            <ExerciseDescription>
+                                <ul style={{ listStyle: 'none' }}>
+                                    <li>> What is Node?</li>
+                                    <li>> Building a Server</li>
+                                    <li>> Advanced Concepts</li>
+                                </ul>
+                            </ExerciseDescription>
+                        </ExerciseCard>
+                    </Link>
+                    <Modal
+                        trigger={<CreateCard>Create Exercise</CreateCard>}
+                        title={'Create an exercise to share!'}
+                        onConfirm={() => console.log('create')}
+                    >
+                        <span>
+                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Adipisci,
+                            illum autem asperiores eaque tempora labore voluptate doloribus mollitia
+                            at ex ea sunt sint nulla veniam. Pariatur totam velit error tempore.
+                        </span>
+                    </Modal>
                 </List>
                 <Tutorial>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis natus ipsa
@@ -218,8 +212,32 @@ function Exercises() {
     );
 }
 
+const CreateCard = styled.div`
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 85%;
+    box-shadow: 2px 2px 5px black;
+    margin-right: 20px;
+    background-color: ${colors.backgroundDark};
+    transition: box-shadow 0.3s;
+    border-radius: 5px;
+    border: 3px dashed white;
+    color: white;
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: light;
+    font-family: ${fonts.display};
+
+    :hover {
+        box-shadow: 5px 5px 8px black;
+    }
+`;
+
 const ExerciseCard = styled.div`
-    width: 200px;
+    width: 20%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -243,10 +261,11 @@ const ExerciseCard = styled.div`
         justify-content: space-between;
         background-color: ${colors.backgroundDark};
         font-family: ${fonts.body};
-        font-size: 1rem;
+        font-size: 1.2rem;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
         padding: 5px 5px;
+        overflow: hidden;
     }
 `;
 
@@ -259,16 +278,16 @@ const WindowButtonWrapper = styled.section`
 const WindowButton = styled.i`
     background-color: ${(props) => props.color};
     border-radius: 50%;
-    margin-right: 3px;
-    width: 10px;
-    height: 10px;
+    margin-right: 5px;
+    width: 12px;
+    height: 12px;
     box-shadow: 0 0 1px ${(props) => props.color};
 `;
 
 const ExerciseDescription = styled.code`
     color: white;
     padding-left: 10px;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     ul {
         padding: 0;
 

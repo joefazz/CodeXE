@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
-    ssr: false
+    ssr: false,
+    loading: LoadingCode
 });
 import { CodeOutput } from '../styled/CodeOutput';
 import { Button } from '../styled/Button';
@@ -12,6 +13,7 @@ import Layout from '../components/Layout';
 import { ContainerContext } from './_app';
 import { Context, Languages } from '../types';
 import { runCode } from '../functions/run_code';
+import LoadingCode from '../components/LoadingCode';
 
 type State = {
     consoleValue: string;
