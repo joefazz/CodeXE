@@ -100,6 +100,7 @@ const Output = styled.div`
 
 function Exercises() {
     const [code, setCode] = useState('// This is the editor');
+
     const container: Context = useContext(ContainerContext) as Context;
 
     return (
@@ -113,7 +114,7 @@ function Exercises() {
                     </Info>
                 </Header>
                 <List>
-                    <Link href="/activity?id=0">
+                    <Link href="/activity?id=5c62ed7b89123f0036e1e074">
                         <ExerciseCard>
                             <div>
                                 <WindowButtonWrapper>
@@ -121,7 +122,7 @@ function Exercises() {
                                     <WindowButton color="#fdbc40" />
                                     <WindowButton color="#34c748" />
                                 </WindowButtonWrapper>
-                                <span>Python 101</span>
+                                <span>Python Strings</span>
                             </div>
                             <ExerciseDescription>
                                 <ul style={{ listStyle: 'none' }}>
@@ -287,7 +288,7 @@ const WindowButton = styled.i`
 const ExerciseDescription = styled.code`
     color: white;
     padding-left: 10px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     ul {
         padding: 0;
 

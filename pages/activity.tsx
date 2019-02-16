@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { QueryStringMapObject } from 'next';
 import dynamic from 'next/dynamic';
+import fetch from 'isomorphic-unfetch';
 import { ContainerContext } from './_app';
 import { Context, MessageTypes, Languages } from '../types';
 import Layout from '../components/Layout';
@@ -27,7 +28,6 @@ type Exercise = {
 
 type ActivityResponse = {
     container: string;
-    progress: number;
     language: Languages;
     difficulty: string;
     length: number;
@@ -44,8 +44,8 @@ function Activity({ activity }: Props) {
     const { socket, response } = useContext(ContainerContext) as Context;
 
     const [codeWidth, setCodeWidth] = useState<string | number>('100%');
-    const [progress, setProgress] = useState(activity.progress);
-    const [currentExercise, setCurrentExercise] = useState(activity.exercises[activity.progress]);
+    const [progress, setProgress] = useState(0);
+    const [currentExercise, setCurrentExercise] = useState(activity.exercises[0]);
     const [code, setCode] = useState(currentExercise.prebakedCode || '# Python code');
 
     // socket.send(
@@ -81,6 +81,7 @@ function Activity({ activity }: Props) {
                         <Button
                             primary
                             style={{ flex: 1, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+                            onClick={() => nextExercise()}
                         >
                             Next
                         </Button>
@@ -92,7 +93,7 @@ function Activity({ activity }: Props) {
                             split={'vertical'}
                             onChange={(size) => setCodeWidth(size)}
                             defaultSize={'75%'}
-                            maxSize={-500}
+                            maxSize={-250}
                             minSize={500}
                             style={{ height: '80%' }}
                         >
@@ -127,30 +128,31 @@ function Activity({ activity }: Props) {
 }
 
 Activity.getInitialProps = async ({ query }: { query: QueryStringMapObject }) => {
-    // const json = await fetch(`http://localhost:4000/activity?id=${query.id}`).then((res) =>
-    //     res.json()
-    // );
+    const json = await fetch(`http://localhost:4000/activity?id=${query.id}`)
+        .then((res) => res.json())
+        .catch((err) => console.log(err));
 
-    const json: ActivityResponse = {
-        description: 'An introduction to the Python programming language',
-        difficulty: 'beginner',
-        exercises: [
-            {
-                title: 'Strings 101',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut gravida facilisis sem id auctor. Integer dictum pellentesque nisi sed dignissim. Suspendisse dapibus vitae velit a laoreet. Cras egestas aliquam aliquam. Phasellus ut lacus fringilla erat vulputate varius. Praesent quis nulla ut ante lobortis sagittis. Nulla a ligula ligula. Pellentesque at libero nisl. Etiam id accumsan ipsum, sit amet fermentum ipsum. Phasellus vel tempus magna, quis auctor lectus. Sed nec nibh eget dolor porttitor congue vel a orci. Vivamus pulvinar dolor elit, ac vehicula nibh aliquet at. Aliquam scelerisque ante elit, a congue orci pulvinar sed. ',
-                id: 0,
-                task: 'Print Hello world',
-                prebakedCode: '# This code is pre baked fam',
-                expectedResult: 'Hello world'
-            }
-        ],
-        container: '0000',
-        language: Languages.PYTHON,
-        progress: 0,
-        title: 'Python 101',
-        length: 12
-    };
+    // Fake Data
+    // const json: ActivityResponse = {
+    //     description: 'An introduction to the Python programming language',
+    //     difficulty: 'beginner',
+    //     exercises: [
+    //         {
+    //             title: 'Strings 101',
+    //             description:
+    //                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut gravida facilisis sem id auctor. Integer dictum pellentesque nisi sed dignissim. Suspendisse dapibus vitae velit a laoreet. Cras egestas aliquam aliquam. Phasellus ut lacus fringilla erat vulputate varius. Praesent quis nulla ut ante lobortis sagittis. Nulla a ligula ligula. Pellentesque at libero nisl. Etiam id accumsan ipsum, sit amet fermentum ipsum. Phasellus vel tempus magna, quis auctor lectus. Sed nec nibh eget dolor porttitor congue vel a orci. Vivamus pulvinar dolor elit, ac vehicula nibh aliquet at. Aliquam scelerisque ante elit, a congue orci pulvinar sed. ',
+    //             id: 0,
+    //             task: 'Print Hello world',
+    //             prebakedCode: '# This code is pre baked fam',
+    //             expectedResult: 'Hello world'
+    //         }
+    //     ],
+    //     container: '0000',
+    //     language: Languages.PYTHON,
+    //     progress: 0,
+    //     title: 'Python 101',
+    //     length: 12
+    // };
 
     return { activity: json };
 };
@@ -179,7 +181,7 @@ const TaskArea = styled.div`
     }
 
     span {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         margin: 5px;
         flex: 9;
     }
