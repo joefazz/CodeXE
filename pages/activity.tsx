@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { QueryStringMapObject } from 'next';
 import dynamic from 'next/dynamic';
 import fetch from 'isomorphic-unfetch';
-import { ContainerContext } from './_app';
+import { SocketContext } from './_app';
 import { Context, MessageTypes, Languages } from '../types';
 import Layout from '../components/Layout';
 import { Split } from '../styled/Split';
@@ -27,7 +27,6 @@ type Exercise = {
 };
 
 type ActivityResponse = {
-    container: string;
     language: Languages;
     difficulty: string;
     length: number;
@@ -41,19 +40,27 @@ type Props = {
 };
 
 function Activity({ activity }: Props) {
-    const { socket, response } = useContext(ContainerContext) as Context;
+    const { socket, response, id } = useContext(SocketContext) as Context;
 
     const [codeWidth, setCodeWidth] = useState<string | number>('100%');
     const [progress, setProgress] = useState(0);
     const [currentExercise, setCurrentExercise] = useState(activity.exercises[0]);
     const [code, setCode] = useState(currentExercise.prebakedCode || '# Python code');
 
-    // socket.send(
-    //     JSON.stringify({
-    //         type: MessageTypes.EXERCISE_START,
-    //         data: { id: activity.container }
-    //     })
-    // );
+    console.log('rerendering or something?');
+
+    useEffect(() => {
+        if (socket && !Object.keys(response.metaData).includes('exerciseContainerId')) {
+            socket.send(JSON.stringify({ type: MessageTypes.CONTAINER_STOP, data: { id } }));
+
+            socket.send(
+                JSON.stringify({
+                    type: MessageTypes.EXERCISE_START,
+                    data: { exerciseID: 0 }
+                })
+            );
+        }
+    });
 
     function nextExercise() {
         setProgress((prev) => prev + 1);
@@ -101,10 +108,24 @@ function Activity({ activity }: Props) {
                                 language={'python'}
                                 width={codeWidth}
                                 height={'100%'}
+                                options={{
+                                    fontSize: 18,
+                                    minimap: { enabled: false },
+                                    cursorStyle: 'block'
+                                }}
                                 value={code}
                                 onChange={(text: string) => setCode(text)}
                             />
-                            <XTerminal container={activity.container} />
+                            {response.metaData.exerciseContainerId ? (
+                                <XTerminal
+                                    containerId={response.metaData.exerciseContainerId}
+                                    bidirectional={true}
+                                />
+                            ) : (
+                                <LoadingTerm>
+                                    <span>Loading: {activity.title} Machine...</span>
+                                </LoadingTerm>
+                            )}
                         </Split>
                     </CodeArea>
                     <ActivityInfo>
@@ -132,27 +153,30 @@ Activity.getInitialProps = async ({ query }: { query: QueryStringMapObject }) =>
         .then((res) => res.json())
         .catch((err) => console.log(err));
 
-    // Fake Data
-    // const json: ActivityResponse = {
-    //     description: 'An introduction to the Python programming language',
-    //     difficulty: 'beginner',
-    //     exercises: [
-    //         {
-    //             title: 'Strings 101',
-    //             description:
-    //                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut gravida facilisis sem id auctor. Integer dictum pellentesque nisi sed dignissim. Suspendisse dapibus vitae velit a laoreet. Cras egestas aliquam aliquam. Phasellus ut lacus fringilla erat vulputate varius. Praesent quis nulla ut ante lobortis sagittis. Nulla a ligula ligula. Pellentesque at libero nisl. Etiam id accumsan ipsum, sit amet fermentum ipsum. Phasellus vel tempus magna, quis auctor lectus. Sed nec nibh eget dolor porttitor congue vel a orci. Vivamus pulvinar dolor elit, ac vehicula nibh aliquet at. Aliquam scelerisque ante elit, a congue orci pulvinar sed. ',
-    //             id: 0,
-    //             task: 'Print Hello world',
-    //             prebakedCode: '# This code is pre baked fam',
-    //             expectedResult: 'Hello world'
-    //         }
-    //     ],
-    //     container: '0000',
-    //     language: Languages.PYTHON,
-    //     progress: 0,
-    //     title: 'Python 101',
-    //     length: 12
-    // };
+    console.log(json);
+
+    if (!json) {
+        // Fake Data
+        const fake: ActivityResponse = {
+            description: 'An introduction to the Python programming language',
+            difficulty: 'beginner',
+            exercises: [
+                {
+                    title: 'Strings 101',
+                    description:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut gravida facilisis sem id auctor. Integer dictum pellentesque nisi sed dignissim. Suspendisse dapibus vitae velit a laoreet. Cras egestas aliquam aliquam. Phasellus ut lacus fringilla erat vulputate varius. Praesent quis nulla ut ante lobortis sagittis. Nulla a ligula ligula. Pellentesque at libero nisl. Etiam id accumsan ipsum, sit amet fermentum ipsum. Phasellus vel tempus magna, quis auctor lectus. Sed nec nibh eget dolor porttitor congue vel a orci. Vivamus pulvinar dolor elit, ac vehicula nibh aliquet at. Aliquam scelerisque ante elit, a congue orci pulvinar sed. ',
+                    id: 0,
+                    task: 'Print Hello world',
+                    prebakedCode: '# This code is pre baked fam',
+                    expectedResult: 'Hello world'
+                }
+            ],
+            language: Languages.PYTHON,
+            title: 'Python 101',
+            length: 12
+        };
+        return { activity: fake };
+    }
 
     return { activity: json };
 };
@@ -193,15 +217,12 @@ const TaskArea = styled.div`
         flex: 1;
         color: white;
         font-size: 1.1rem;
+        padding: 10px;
         margin: 5px;
         background-color: #3c4556;
         border-radius: 8px;
         box-shadow: 2px 2px 1px black;
     }
-`;
-
-const NextArea = styled.div`
-    flex: 1;
 `;
 
 const SecondPane = styled.div`
@@ -245,4 +266,16 @@ const Details = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+`;
+
+const LoadingTerm = styled.div`
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    font-family: Consolas, monospace;
+    font-size: 24px;
 `;

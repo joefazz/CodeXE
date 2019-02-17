@@ -8,7 +8,7 @@ const Monaco: any = dynamic(import('../components/Monaco') as any, {
 });
 import Layout from '../components/Layout';
 import XTerminal from '../components/Terminal';
-import { ContainerContext } from './_app';
+import { SocketContext } from './_app';
 import { Context } from '../types';
 import LoadingCode from '../components/LoadingCode';
 import Modal from '../components/Modal';
@@ -101,7 +101,7 @@ const Output = styled.div`
 function Exercises() {
     const [code, setCode] = useState('// This is the editor');
 
-    const container: Context = useContext(ContainerContext) as Context;
+    const container: Context = useContext(SocketContext) as Context;
 
     return (
         <Layout isLoggedIn={false}>
@@ -114,7 +114,7 @@ function Exercises() {
                     </Info>
                 </Header>
                 <List>
-                    <Link href="/activity?id=5c62ed7b89123f0036e1e074">
+                    <Link href="/activity?id=5c68546ff110a9003e9a358e">
                         <ExerciseCard>
                             <div>
                                 <WindowButtonWrapper>
@@ -205,7 +205,7 @@ function Exercises() {
                     />
                 </Code>
                 <Output>
-                    <XTerminal container={container.id} />
+                    <XTerminal containerId={container.id} bidirectional={true} />
                 </Output>
                 {/* <Footer>This is a footer which will defo have content in it one day</Footer> */}
             </Page>

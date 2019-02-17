@@ -10,8 +10,9 @@ Terminal.applyAddon(attach);
 Terminal.applyAddon(fit);
 
 type Props = {
-    container: string;
-    // termHeight: number;
+    containerId: string;
+    bidirectional: boolean;
+    onConnectText?: string[] | string;
 };
 
 export default class XTerminal extends React.Component<Props> {
@@ -87,6 +88,11 @@ export default class XTerminal extends React.Component<Props> {
     //     }
     // }
 
+    componentDidUpdate() {
+        // @ts-ignore
+        this.term.fit();
+    }
+
     componentWillUnmount() {
         clearTimeout(this.interval);
     }
@@ -108,19 +114,28 @@ export default class XTerminal extends React.Component<Props> {
     }
 
     _connectToSocket() {
-        this.streamSocket = new WebSocket(`ws://localhost:4000/connect?id=${this.props.container}`);
+        this.streamSocket = new WebSocket(
+            `ws://localhost:4000/connect?id=${this.props.containerId}&bidirectional=${
+                this.props.bidirectional
+            }`
+        );
 
         this.streamSocket.onopen = () => {
             // @ts-ignore
             this.term.attach(this.streamSocket, true);
-            this.term.writeln('Connected to Terminal!');
-            this.term.writeln(
-                `Please note this is a slim version of linux with certain commands restricted!`
-            );
-            this.term.writeln(
-                'If you want to save your work, Git is installed so I recommend making a repo and pushing to it 🙂'
-            );
-            this.term.writeln(`Press 'Enter' to start`);
+            if (this.props.onConnectText && Array.isArray(this.props.onConnectText)) {
+                this.props.onConnectText.forEach((line) => {
+                    this.term.writeln(' ');
+                    this.term.writeln(' ');
+                    this.term.write(line);
+                });
+            } else {
+                // this.term.writeln(this.props.onConnectText);
+            }
+            // this.term.writeln(
+            //     'If you want to save your work, Git is installed so I recommend making a repo and pushing to it 🙂'
+            // );
+            // this.term.writeln(`Press 'Enter' to start`);
         };
         this.streamSocket.onclose = () => {
             this.term.clear();

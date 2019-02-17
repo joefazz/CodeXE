@@ -3,9 +3,9 @@ export type Context = {
     status: 'connected' | 'disconnected';
     socket: WebSocket;
     response: {
-        readableData: string;
+        readData: any;
         writeData: string;
-        meta_data: any;
+        metaData: any;
     };
     containerName: string;
 };
@@ -21,5 +21,7 @@ export enum MessageTypes {
     CONTAINER_EXEC = 'Container.Exec',
     CONTAINER_READ = 'Container.Read',
     CONTAINER_STOP = 'Container.Stop',
-    EXERCISE_START = 'Exercise.Start'
+    EXERCISE_START = 'Exercise.Start',
+    EXERCISE_CONNECT = 'Exercise.Connect',
+    EXERCISE_STOP = 'Exercise.Stop'
 }

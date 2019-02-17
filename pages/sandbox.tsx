@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
 import XTerminal from '../components/Terminal';
-import { ContainerContext } from './_app';
+import { SocketContext } from './_app';
 import { Context, Languages } from '../types';
 import { colors } from '../constants';
 import { Button } from '../styled/Button';
@@ -42,7 +42,7 @@ type State = {
 };
 
 export default class SandboxPage extends React.Component<{}, State> {
-    static contextType = ContainerContext;
+    static contextType = SocketContext;
 
     state = {
         codeWidth: '100%',
@@ -124,7 +124,7 @@ export default class SandboxPage extends React.Component<{}, State> {
                             </ControlArea>
                         </Controls>
                     </Split>
-                    <XTerminal container={this.context.id} />
+                    <XTerminal containerId={this.context.id} bidirectional={true} />
                 </Split>
             </Layout>
         );

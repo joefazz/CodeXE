@@ -3,7 +3,7 @@ import Head from 'next/head';
 import React from 'react';
 import { MessageTypes } from '../types';
 
-export const ContainerContext = React.createContext({});
+export const SocketContext = React.createContext({});
 
 export default class MyApp extends App {
     containerInfo: any;
@@ -19,7 +19,12 @@ export default class MyApp extends App {
         return { pageProps };
     }
 
-    state = { status: 'disconnected', containerName: '', id: '', response: {} };
+    state = {
+        status: 'disconnected',
+        containerName: '',
+        id: '',
+        response: { readData: {}, metaData: {} }
+    };
 
     componentDidMount() {
         this.socket = new WebSocket('ws://localhost:4000/');
@@ -56,6 +61,8 @@ export default class MyApp extends App {
                 case MessageTypes.CONTAINER_STOP:
                     console.log('stopped container');
                     break;
+                case MessageTypes.EXERCISE_CONNECT:
+                    this.setState({ response: { metaData: data } });
                 default:
                     console.log('other type', data);
             }
@@ -95,9 +102,9 @@ export default class MyApp extends App {
                         href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"
                     />
                 </Head>
-                <ContainerContext.Provider value={{ ...this.state, socket: this.socket }}>
+                <SocketContext.Provider value={{ ...this.state, socket: this.socket }}>
                     <Component {...pageProps} />
-                </ContainerContext.Provider>
+                </SocketContext.Provider>
             </Container>
         );
     }

@@ -10,7 +10,7 @@ import { Button } from '../styled/Button';
 import { Footer } from '../styled/Footer';
 import { colors, fonts } from '../constants';
 import Layout from '../components/Layout';
-import { ContainerContext } from './_app';
+import { SocketContext } from './_app';
 import { Context, Languages } from '../types';
 import { runCode } from '../functions/run_code';
 import LoadingCode from '../components/LoadingCode';
@@ -23,7 +23,7 @@ type State = {
 export default class HomePage extends React.Component<{}, State> {
     context: Context;
 
-    static contextType = ContainerContext;
+    static contextType = SocketContext;
 
     state = {
         consoleValue: '// Code some JavaScript!\n',

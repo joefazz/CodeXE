@@ -9,7 +9,7 @@ import { NavLink } from '../styled/NavLink';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import { fonts } from '../constants';
-import { ContainerContext } from '../pages/_app';
+import { SocketContext } from '../pages/_app';
 import { Context } from '../types';
 
 const RootPage = styled.div`
@@ -68,7 +68,7 @@ type Props = {
  * @param props
  */
 function Layout(props: Props) {
-    const containerContext: Context = useContext(ContainerContext) as Context;
+    const containerContext: Context = useContext(SocketContext) as Context;
 
     return (
         <RootPage>
