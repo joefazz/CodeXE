@@ -4,7 +4,7 @@ export type Context = {
     socket: WebSocket;
     response: {
         readData: any;
-        writeData: string;
+        writeData: any;
         metaData: any;
     };
     containerName: string;
@@ -23,5 +23,8 @@ export enum MessageTypes {
     CONTAINER_STOP = 'Container.Stop',
     EXERCISE_START = 'Exercise.Start',
     EXERCISE_CONNECT = 'Exercise.Connect',
-    EXERCISE_STOP = 'Exercise.Stop'
+    EXERCISE_STOP = 'Exercise.Stop',
+    EXERCISE_RUN = 'Exercise.Run',
+    EXERCISE_EXEC = 'Exercise.Exec',
+    CODE_SAVE = 'Code.Save'
 }

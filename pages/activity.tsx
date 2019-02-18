@@ -46,11 +46,11 @@ function Activity({ activity }: Props) {
     const [progress, setProgress] = useState(0);
     const [currentExercise, setCurrentExercise] = useState(activity.exercises[0]);
     const [code, setCode] = useState(currentExercise.prebakedCode || '# Python code');
-
-    console.log('rerendering or something?');
+    const [stream, setStream] = useState<WebSocket | string>('');
 
     useEffect(() => {
-        if (socket && !Object.keys(response.metaData).includes('exerciseContainerId')) {
+        if (socket) {
+            console.log('here');
             socket.send(JSON.stringify({ type: MessageTypes.CONTAINER_STOP, data: { id } }));
 
             socket.send(
@@ -59,8 +59,23 @@ function Activity({ activity }: Props) {
                     data: { exerciseID: 0 }
                 })
             );
+        } else {
+            console.log('no socket');
         }
-    });
+    }, [socket]);
+
+    useEffect(() => {
+        if (response.metaData.didSave) {
+            console.log(response);
+            let stream = new WebSocket(
+                `ws://localhost:4000/exercise?id=${
+                    response.metaData.exerciseContainerId
+                }&repl="python"&filename="main.py"`
+            );
+
+            setStream(stream);
+        }
+    }, [response.metaData.didSave]);
 
     function nextExercise() {
         setProgress((prev) => prev + 1);
@@ -69,6 +84,19 @@ function Activity({ activity }: Props) {
         if (exercise.prebakedCode) {
             setCode(exercise.prebakedCode);
         }
+    }
+
+    function saveCode() {
+        socket.send(
+            JSON.stringify({
+                type: MessageTypes.CODE_SAVE,
+                data: {
+                    id: response.metaData.exerciseContainerId,
+                    filename: 'main.py',
+                    code
+                }
+            })
+        );
     }
 
     return (
@@ -120,6 +148,8 @@ function Activity({ activity }: Props) {
                                 <XTerminal
                                     containerId={response.metaData.exerciseContainerId}
                                     bidirectional={true}
+                                    output={response.writeData || ''}
+                                    customStream={stream}
                                 />
                             ) : (
                                 <LoadingTerm>
@@ -132,7 +162,9 @@ function Activity({ activity }: Props) {
                         <h1>{activity.title}</h1>
 
                         <ButtonArea>
-                            <Button success>Run</Button>
+                            <Button success onClick={() => saveCode()}>
+                                Run
+                            </Button>
                         </ButtonArea>
 
                         <Details>
@@ -152,8 +184,6 @@ Activity.getInitialProps = async ({ query }: { query: QueryStringMapObject }) =>
     const json = await fetch(`http://localhost:4000/activity?id=${query.id}`)
         .then((res) => res.json())
         .catch((err) => console.log(err));
-
-    console.log(json);
 
     if (!json) {
         // Fake Data

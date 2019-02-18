@@ -23,7 +23,7 @@ export default class MyApp extends App {
         status: 'disconnected',
         containerName: '',
         id: '',
-        response: { readData: {}, metaData: {} }
+        response: { readData: {}, metaData: {}, writeData: {} }
     };
 
     componentDidMount() {
@@ -35,10 +35,8 @@ export default class MyApp extends App {
         };
 
         this.socket.onmessage = (event) => {
-            console.log('Message Recieved!');
-
             const { type, data }: { type: MessageTypes; data: any } = JSON.parse(event.data);
-            console.log(data);
+            console.log('Message Recieved!', 'Type: ' + type);
 
             switch (type) {
                 case MessageTypes.CONTAINER_START:
@@ -52,17 +50,39 @@ export default class MyApp extends App {
                     break;
                 case MessageTypes.CONTAINER_EXEC:
                     console.log('Execution returned');
-                    this.setState({ response: { writeData: data } });
+                    this.setState({
+                        response: { ...this.state.response, writeData: data }
+                    });
                     break;
                 case MessageTypes.CONTAINER_READ:
                     console.log('Code read');
-                    this.setState({ response: { readData: data } });
+                    this.setState({
+                        response: { ...this.state.response, readData: data }
+                    });
                     break;
                 case MessageTypes.CONTAINER_STOP:
                     console.log('stopped container');
                     break;
                 case MessageTypes.EXERCISE_CONNECT:
-                    this.setState({ response: { metaData: data } });
+                    this.setState({
+                        response: { ...this.state.response, metaData: data }
+                    });
+                    break;
+                case MessageTypes.EXERCISE_EXEC:
+                    console.log('Exercise Execution Returned');
+                    this.setState({
+                        response: { ...this.state.response, writeData: data }
+                    });
+                    break;
+                case MessageTypes.CODE_SAVE:
+                    console.log('Code save returned');
+                    this.setState({
+                        response: {
+                            ...this.state.response,
+                            metaData: { ...this.state.response.metaData, didSave: data.success }
+                        }
+                    });
+                    break;
                 default:
                     console.log('other type', data);
             }

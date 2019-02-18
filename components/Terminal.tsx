@@ -13,6 +13,8 @@ type Props = {
     containerId: string;
     bidirectional: boolean;
     onConnectText?: string[] | string;
+    output?: string;
+    customStream?: WebSocket | string;
 };
 
 export default class XTerminal extends React.Component<Props> {
@@ -78,19 +80,24 @@ export default class XTerminal extends React.Component<Props> {
             }
         };
 
-        this._connectToSocket();
+        this._connectToSocket(this.props.customStream);
     }
 
-    // componentDidUpdate(prevProps: Props) {
-    //     if (prevProps.termHeight !== this.props.termHeight) {
-    //         // @ts-ignore
-    //         this.term.fit();
-    //     }
-    // }
-
-    componentDidUpdate() {
+    componentDidUpdate(prev: Props) {
         // @ts-ignore
         this.term.fit();
+
+        if (this.props.output !== prev.output && this.props.output !== '') {
+            console.log(this.props.output);
+            this.term.writeln('');
+            this.term.write('> ');
+            this.term.write(this.props.output);
+            this.term.writeln('');
+        }
+
+        if (this.props.customStream !== prev.customStream) {
+            this._connectToSocket(this.props.customStream);
+        }
     }
 
     componentWillUnmount() {
@@ -113,12 +120,17 @@ export default class XTerminal extends React.Component<Props> {
         );
     }
 
-    _connectToSocket() {
-        this.streamSocket = new WebSocket(
-            `ws://localhost:4000/connect?id=${this.props.containerId}&bidirectional=${
-                this.props.bidirectional
-            }`
-        );
+    _connectToSocket(socket: WebSocket | string) {
+        if (socket === '') {
+            this.streamSocket = new WebSocket(
+                `ws://localhost:4000/connect?id=${this.props.containerId}&bidirectional=${
+                    this.props.bidirectional
+                }`
+            );
+        } else {
+            this.streamSocket = socket as WebSocket;
+            console.log('Connecting to custom stream...');
+        }
 
         this.streamSocket.onopen = () => {
             // @ts-ignore
