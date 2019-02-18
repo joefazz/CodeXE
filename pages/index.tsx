@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
@@ -11,170 +11,180 @@ import { Footer } from '../styled/Footer';
 import { colors, fonts } from '../constants';
 import Layout from '../components/Layout';
 import { SocketContext } from './_app';
-import { Context, Languages } from '../types';
+import { Context, Languages, MessageTypes } from '../types';
 import { runCode } from '../functions/run_code';
 import LoadingCode from '../components/LoadingCode';
 
-type State = {
-    consoleValue: string;
-    selectedLang: Languages;
-};
+function HomePage() {
+    const { socket, id, containerName, response } = useContext(SocketContext) as Context;
 
-export default class HomePage extends React.Component<{}, State> {
-    context: Context;
+    const [code, setCode] = useState('// Code some JavaScript!\n');
+    const [language, setLang] = useState(Languages.JS);
 
-    static contextType = SocketContext;
-
-    state = {
-        consoleValue: '// Code some JavaScript!\n',
-        selectedLang: Languages.JS
-    };
-
-    switchLanguage = (language: Languages) => {
-        const consoleValue =
+    function switchLanguage(language: Languages) {
+        setCode(
             language === Languages.JS
                 ? '// Enter some JavaScript'
                 : language === Languages.PYTHON
                 ? '# Enter some Python'
-                : '// Enter some C';
+                : '// Enter some C'
+        );
 
-        // this.context.socket.send(
-        //     JSON.stringify({ type: 'Code.Read', id: this.context.containerID, file })
-        // );
-        this.setState({
-            selectedLang: language,
-            consoleValue
-        });
-    };
+        setLang(language);
+    }
 
-    render() {
-        return (
-            <Layout isLoggedIn>
-                <Page>
-                    <CodeSection>
-                        <H1>Do coding exercises right in your browser!</H1>
-                        <LanguageWrapper>
-                            <li
-                                onClick={() => this.switchLanguage(Languages.JS)}
-                                style={{
-                                    borderTopLeftRadius: '5px',
-                                    borderBottomLeftRadius: '5px'
-                                }}
-                            >
-                                JavaScript
-                            </li>
-                            <li onClick={() => this.switchLanguage(Languages.PYTHON)}>Python</li>
-                            <li
-                                onClick={() => this.switchLanguage(Languages.C)}
-                                style={{
-                                    borderRight: 'none',
-                                    borderTopRightRadius: '5px',
-                                    borderBottomRightRadius: '5px'
-                                }}
-                            >
-                                C
-                            </li>
-                        </LanguageWrapper>
-                        <Monaco
-                            height="100%"
-                            width="100%"
-                            options={{
-                                minimap: { enabled: false },
-                                fontSize: 18,
-                                lineNumbers: 'off',
-                                cursorStyle: 'block'
-                            }}
-                            language={this.state.selectedLang}
-                            onChange={(newVal: string) => this.setState({ consoleValue: newVal })}
-                            value={this.state.consoleValue}
-                        />
-                        <div>
-                            <Button
-                                success
-                                onClick={() =>
-                                    runCode({
-                                        id: this.context.id,
-                                        code: this.state.consoleValue,
-                                        language: this.state.selectedLang,
-                                        socket: this.context.socket
-                                    })
-                                }
-                                style={{
-                                    fontSize: '1.8rem',
-                                    borderTopLeftRadius: 0,
-                                    borderTopRightRadius: 0
-                                }}
-                            >
-                                Run
-                            </Button>
-                        </div>
-                        <CodeOutput>
-                            {this.context.containerName === ''
-                                ? 'Disconnected'
-                                : this.context.containerName +
-                                  ': ' +
-                                  this.context.response.writeData}
-                        </CodeOutput>
-                    </CodeSection>
-                    <InfoSection>
-                        <img src={'/static/svgs/Moon.svg'} alt="logo" className="App-logo" />
-                        <FeatureArea>
-                            <div
-                                style={{
-                                    marginTop: '9%',
-                                    shapeOutside: 'circle(40%)',
-                                    height: '35vh',
-                                    width: '35vh',
-                                    float: 'left',
-                                    textAlign: 'right'
-                                }}
-                            />
-                            <br />
-                            <li>
-                                <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                Automagically generated exercises
-                            </li>
+    useEffect(() => {
+        if (response.metaData.saveInfo.succeed) {
+            const filename =
+                language === Languages.JS
+                    ? 'index.js'
+                    : language === Languages.PYTHON
+                    ? 'main.py'
+                    : 'main.c';
 
-                            <li>
-                                <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                Fully featured code editor
-                            </li>
-                            <li>
-                                <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                Interact with a full Linux Virtual Machine
-                            </li>
-                            <li>
-                                <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                Learn the basics of some of the most popular languages
-                            </li>
-                            <li>
-                                <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
-                                No set up required
-                            </li>
-                        </FeatureArea>
-                    </InfoSection>
-                    <ButtonArea>
-                        <Button raised>Log In</Button>
-                        <Button
-                            primary
-                            raised
-                            style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-                        >
-                            Sign Up
-                        </Button>
-                    </ButtonArea>
-                    <Footer>
-                        <p>
-                            OpenStudy is the final year project of{' '}
-                            <a href="https://twitter.com/purefazz">Joe Fazzino</a>, he is not
-                            responsible for anything evil that you decide to do.
-                        </p>
-                    </Footer>
-                </Page>
-            </Layout>
+            runCode({ id, filename, language, socket });
+        }
+    }, [response.metaData.saveInfo.timestamp]);
+
+    function saveCode() {
+        const filename =
+            language === Languages.JS
+                ? 'index.js'
+                : language === Languages.PYTHON
+                ? 'main.py'
+                : 'main.c';
+
+        socket.send(
+            JSON.stringify({
+                type: MessageTypes.CODE_SAVE,
+                data: {
+                    id,
+                    filename, // this depends on lang
+                    code
+                }
+            })
         );
     }
+
+    return (
+        <Layout isLoggedIn>
+            <Page>
+                <CodeSection>
+                    <H1>Do coding exercises right in your browser!</H1>
+                    <LanguageWrapper>
+                        <li
+                            onClick={() => switchLanguage(Languages.JS)}
+                            style={{
+                                borderTopLeftRadius: '5px',
+                                borderBottomLeftRadius: '5px'
+                            }}
+                        >
+                            JavaScript
+                        </li>
+                        <li onClick={() => switchLanguage(Languages.PYTHON)}>Python</li>
+                        <li
+                            onClick={() => switchLanguage(Languages.C)}
+                            style={{
+                                borderRight: 'none',
+                                borderTopRightRadius: '5px',
+                                borderBottomRightRadius: '5px'
+                            }}
+                        >
+                            C
+                        </li>
+                    </LanguageWrapper>
+                    <Monaco
+                        height="100%"
+                        width="100%"
+                        options={{
+                            minimap: { enabled: false },
+                            fontSize: 18,
+                            lineNumbers: 'off',
+                            cursorStyle: 'block'
+                        }}
+                        language={language}
+                        onChange={(newVal: string) => setCode(newVal)}
+                        value={code}
+                    />
+                    <div>
+                        <Button
+                            success
+                            onClick={() => saveCode()}
+                            style={{
+                                fontSize: '1.8rem',
+                                borderTopLeftRadius: 0,
+                                borderTopRightRadius: 0
+                            }}
+                        >
+                            Run
+                        </Button>
+                    </div>
+                    <CodeOutput>
+                        {containerName === ''
+                            ? 'Disconnected'
+                            : containerName + ': ' + response.writeData.output}
+                    </CodeOutput>
+                </CodeSection>
+                <InfoSection>
+                    <img src={'/static/svgs/Moon.svg'} alt="logo" className="App-logo" />
+                    <FeatureArea>
+                        <div
+                            style={{
+                                marginTop: '9%',
+                                shapeOutside: 'circle(40%)',
+                                height: '35vh',
+                                width: '35vh',
+                                float: 'left',
+                                textAlign: 'right'
+                            }}
+                        />
+                        <br />
+                        <li>
+                            <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
+                            Automagically generated exercises
+                        </li>
+
+                        <li>
+                            <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
+                            Fully featured code editor
+                        </li>
+                        <li>
+                            <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
+                            Interact with a full Linux Virtual Machine
+                        </li>
+                        <li>
+                            <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
+                            Learn the basics of some of the most popular languages
+                        </li>
+                        <li>
+                            <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
+                            No set up required
+                        </li>
+                    </FeatureArea>
+                </InfoSection>
+                <ButtonArea>
+                    <Button raised>Log In</Button>
+                    <Button
+                        primary
+                        raised
+                        style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                    >
+                        Sign Up
+                    </Button>
+                </ButtonArea>
+                <Footer>
+                    <p>
+                        OpenStudy is the final year project of{' '}
+                        <a href="https://twitter.com/purefazz">Joe Fazzino</a>, he is not
+                        responsible for anything evil that you decide to do.
+                    </p>
+                </Footer>
+            </Page>
+        </Layout>
+    );
 }
+
+export default HomePage;
 
 const Page = styled.div`
     display: grid;

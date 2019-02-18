@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
 import XTerminal from '../components/Terminal';
 import { SocketContext } from './_app';
-import { Context, Languages } from '../types';
+import { Context, MessageTypes, Languages } from '../types';
 import { colors } from '../constants';
 import { Button } from '../styled/Button';
-import { runCode } from '../functions/run_code';
 import LoadingCode from '../components/LoadingCode';
 import { Split } from '../styled/Split';
 const Monaco: any = dynamic(import('../components/Monaco') as any, {
@@ -34,99 +33,98 @@ const ControlArea = styled.div`
     height: 100%;
 `;
 
-type State = {
-    codeWidth: number | string;
-    codeHeight: number | string;
-    code: string;
-    language: { value: Languages; label: string };
-};
+function SandboxPage() {
+    const { socket, id } = useContext(SocketContext) as Context;
 
-export default class SandboxPage extends React.Component<{}, State> {
-    static contextType = SocketContext;
+    const [codeWidth, setCodeWidth] = useState<string | number>('100%');
+    const [codeHeight, setCodeHeight] = useState<string | number>('100%');
+    const [code, setCode] = useState('// Enter code');
+    const [language, setLang] = useState({ value: Languages.JS, label: 'javascript' });
 
-    state = {
-        codeWidth: '100%',
-        code: '// Enter code',
-        language: { value: Languages.JS, label: 'JavaScript' },
-        codeHeight: '100%'
-    };
-
-    context: Context;
-    languages = [
+    const languageOpts = [
         { value: Languages.JS, label: 'JavaScript' },
         { value: Languages.PYTHON, label: 'Python' },
         { value: Languages.C, label: 'C/C++' }
     ];
 
-    render() {
-        return (
-            <Layout isLoggedIn={false}>
-                <Split
-                    split={'vertical'}
-                    defaultSize="50%"
-                    onChange={(size) => this.setState({ codeWidth: size })}
-                >
-                    <Split
-                        split={'horizontal'}
-                        defaultSize="95%"
-                        maxSize="95%"
-                        onChange={(size) => this.setState({ codeHeight: size })}
-                    >
-                        <Monaco
-                            language={this.state.language.value}
-                            width={this.state.codeWidth}
-                            height={this.state.codeHeight}
-                            options={{
-                                fontSize: 18,
-                                minimap: { enabled: false },
-                                cursorStyle: 'block'
-                            }}
-                            onChange={(newVal: string) =>
-                                this.setState({
-                                    code: newVal
-                                })
-                            }
-                            value={this.state.code}
-                        />
-                        <Controls>
-                            <ControlArea>
-                                <Button
-                                    primary
-                                    success
-                                    style={{
-                                        minHeight: '100%',
-                                        borderRadius: 0
-                                    }}
-                                    onClick={() =>
-                                        runCode({
-                                            id: this.context.id,
-                                            language: this.state.language.value,
-                                            code: this.state.code,
-                                            socket: this.context.socket
-                                        })
-                                    }
-                                >
-                                    Save
-                                </Button>
-                            </ControlArea>
-                            <ControlArea>
-                                <Select
-                                    options={this.languages}
-                                    menuPlacement={'auto'}
-                                    value={this.state.language}
-                                    onChange={(opt) =>
-                                        // @ts-ignore
-                                        this.setState({
-                                            language: opt
-                                        })
-                                    }
-                                />
-                            </ControlArea>
-                        </Controls>
-                    </Split>
-                    <XTerminal containerId={this.context.id} bidirectional={true} />
-                </Split>
-            </Layout>
+    // Not really sure if i want to implement running code in sandbox?
+    // useEffect(() => {
+    //     if (response.metaData.saveInfo.succeed) {
+    //     }
+    // }, [response.metaData.saveInfo.timestamp]);
+
+    function saveCode() {
+        const filename =
+            language.value === Languages.JS
+                ? 'index.js'
+                : language.value === Languages.PYTHON
+                ? 'main.py'
+                : 'main.c';
+
+        socket.send(
+            JSON.stringify({
+                type: MessageTypes.CODE_SAVE,
+                data: {
+                    id,
+                    filename, // this depends on lang
+                    code
+                }
+            })
         );
     }
+
+    return (
+        <Layout isLoggedIn={false}>
+            <Split split={'vertical'} defaultSize="50%" onChange={(size) => setCodeWidth(size)}>
+                <Split
+                    split={'horizontal'}
+                    defaultSize="95%"
+                    maxSize="95%"
+                    onChange={(size) => setCodeHeight(size)}
+                >
+                    <Monaco
+                        language={language.value}
+                        width={codeWidth}
+                        height={codeHeight}
+                        options={{
+                            fontSize: 18,
+                            minimap: { enabled: false },
+                            cursorStyle: 'block'
+                        }}
+                        onChange={(newVal: string) => setCode(newVal)}
+                        value={code}
+                    />
+                    <Controls>
+                        <ControlArea>
+                            <Button
+                                primary
+                                success
+                                style={{
+                                    minHeight: '100%',
+                                    borderRadius: 0
+                                }}
+                                onClick={() => saveCode()}
+                            >
+                                Save
+                            </Button>
+                        </ControlArea>
+                        <ControlArea>
+                            <Select
+                                options={languageOpts}
+                                menuPlacement={'auto'}
+                                value={language}
+                                onChange={(opt) =>
+                                    // @ts-ignore
+                                    setLang(opt)
+                                }
+                            />
+                        </ControlArea>
+                    </Controls>
+                </Split>
+                <XTerminal containerId={id} bidirectional={true} />
+            </Split>
+        </Layout>
+    );
 }
+
+export default SandboxPage;

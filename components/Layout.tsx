@@ -115,9 +115,9 @@ function Layout(props: Props) {
                     <Link href="/exercises">
                         <NavLink>Exercises</NavLink>
                     </Link>
-                    <Link href="/profile">
+                    {/* <Link href="/profile">
                         <NavLink>Profile</NavLink>
-                    </Link>
+                    </Link> */}
                     {props.isLoggedIn ? (
                         <Avatar src="https://pbs.twimg.com/profile_images/1026402265190617089/zMyg2gvB_400x400.jpg" />
                     ) : (

@@ -23,7 +23,11 @@ export default class MyApp extends App {
         status: 'disconnected',
         containerName: '',
         id: '',
-        response: { readData: {}, metaData: {}, writeData: {} }
+        response: {
+            readData: {},
+            metaData: { saveInfo: {}, exercise: {} },
+            writeData: { output: 'Output' }
+        }
     };
 
     componentDidMount() {
@@ -51,7 +55,7 @@ export default class MyApp extends App {
                 case MessageTypes.CONTAINER_EXEC:
                     console.log('Execution returned');
                     this.setState({
-                        response: { ...this.state.response, writeData: data }
+                        response: { ...this.state.response, writeData: { output: data } }
                     });
                     break;
                 case MessageTypes.CONTAINER_READ:
@@ -65,13 +69,10 @@ export default class MyApp extends App {
                     break;
                 case MessageTypes.EXERCISE_CONNECT:
                     this.setState({
-                        response: { ...this.state.response, metaData: data }
-                    });
-                    break;
-                case MessageTypes.EXERCISE_EXEC:
-                    console.log('Exercise Execution Returned');
-                    this.setState({
-                        response: { ...this.state.response, writeData: data }
+                        response: {
+                            ...this.state.response,
+                            metaData: { ...this.state.response.metaData, exercise: data }
+                        }
                     });
                     break;
                 case MessageTypes.CODE_SAVE:
@@ -79,7 +80,10 @@ export default class MyApp extends App {
                     this.setState({
                         response: {
                             ...this.state.response,
-                            metaData: { ...this.state.response.metaData, didSave: data.success }
+                            metaData: {
+                                ...this.state.response.metaData,
+                                saveInfo: { timestamp: Date.now(), succeed: data.success }
+                            }
                         }
                     });
                     break;

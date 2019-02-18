@@ -33,6 +33,7 @@ type ActivityResponse = {
     description: string;
     title: string;
     exercises: Exercise[];
+    entrypoint: string;
 };
 
 type Props = {
@@ -65,17 +66,17 @@ function Activity({ activity }: Props) {
     }, [socket]);
 
     useEffect(() => {
-        if (response.metaData.didSave) {
+        if (response.metaData.saveInfo.succeed) {
             console.log(response);
             let stream = new WebSocket(
                 `ws://localhost:4000/exercise?id=${
-                    response.metaData.exerciseContainerId
+                    response.metaData.exercise.exerciseContainerId
                 }&repl="python"&filename="main.py"`
             );
 
             setStream(stream);
         }
-    }, [response.metaData.didSave]);
+    }, [response.metaData.saveInfo.timestamp]);
 
     function nextExercise() {
         setProgress((prev) => prev + 1);
@@ -91,8 +92,8 @@ function Activity({ activity }: Props) {
             JSON.stringify({
                 type: MessageTypes.CODE_SAVE,
                 data: {
-                    id: response.metaData.exerciseContainerId,
-                    filename: 'main.py',
+                    id: response.metaData.exercise.exerciseContainerId,
+                    filename: activity.entrypoint,
                     code
                 }
             })
@@ -144,9 +145,9 @@ function Activity({ activity }: Props) {
                                 value={code}
                                 onChange={(text: string) => setCode(text)}
                             />
-                            {response.metaData.exerciseContainerId ? (
+                            {response.metaData.exercise.exerciseContainerId ? (
                                 <XTerminal
-                                    containerId={response.metaData.exerciseContainerId}
+                                    containerId={response.metaData.exercise.exerciseContainerId}
                                     bidirectional={true}
                                     output={response.writeData || ''}
                                     customStream={stream}
@@ -190,6 +191,7 @@ Activity.getInitialProps = async ({ query }: { query: QueryStringMapObject }) =>
         const fake: ActivityResponse = {
             description: 'An introduction to the Python programming language',
             difficulty: 'beginner',
+            entrypoint: 'main.py',
             exercises: [
                 {
                     title: 'Strings 101',

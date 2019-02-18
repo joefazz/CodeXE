@@ -6,12 +6,12 @@ export const Page = styled.div`
     display: grid;
 `;
 
-export default class ProfilePage extends React.Component {
-    render() {
-        return (
-            <Page>
-                <Hero>Profile</Hero>
-            </Page>
-        );
-    }
+function ProfilePage() {
+    return (
+        <Page>
+            <Hero>Profile</Hero>
+        </Page>
+    );
 }
+
+export default ProfilePage;

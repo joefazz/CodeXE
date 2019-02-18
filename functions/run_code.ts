@@ -2,16 +2,16 @@ import { Languages, MessageTypes } from '../types';
 
 type Params = {
     id: string;
-    code: string;
+    filename: string;
     language: Languages;
     socket: WebSocket;
 };
 export function runCode(params: Params) {
-    const { id, code, language, socket } = params;
+    const { id, filename, language, socket } = params;
 
-    let message: { code: string; id: string; repl: string } = {
+    let message: { filename: string; id: string; repl: string } = {
         id: id,
-        code,
+        filename,
         repl: 'node'
     };
 

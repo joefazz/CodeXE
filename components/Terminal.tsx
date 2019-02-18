@@ -18,8 +18,13 @@ type Props = {
 };
 
 export default class XTerminal extends React.Component<Props> {
-    term: Terminal;
+    term: Terminal & {
+        attach?: (socket: WebSocket, isBidirectional: boolean, isBuffered: boolean) => void;
+        detach?: (socket: WebSocket) => void;
+        fit?: () => void;
+    };
     streamSocket: WebSocket;
+    exerciseSocket: WebSocket;
     elementId: string;
     failures: number;
     interval?: number;
@@ -47,7 +52,6 @@ export default class XTerminal extends React.Component<Props> {
 
         this.term.open(document.querySelector(`#${this.elementId}`));
 
-        // @ts-ignore
         this.term.fit();
         this.term.focus();
 
@@ -64,7 +68,6 @@ export default class XTerminal extends React.Component<Props> {
             // ctrl + shift + metakey + +
             if ((e.keyCode === 187 || e.keyCode === 61) && e.shiftKey && e.ctrlKey && e.altKey) {
                 this.term.setOption('fontSize', ++this.fontSize);
-                // @ts-ignore
                 this.term.fit();
             }
             // ctrl + shift + metakey + -
@@ -75,16 +78,14 @@ export default class XTerminal extends React.Component<Props> {
                 e.altKey
             ) {
                 this.term.setOption('fontSize', --this.fontSize);
-                // @ts-ignore
                 this.term.fit();
             }
         };
 
-        this._connectToSocket(this.props.customStream);
+        this._connectToMainSocket();
     }
 
     componentDidUpdate(prev: Props) {
-        // @ts-ignore
         this.term.fit();
 
         if (this.props.output !== prev.output && this.props.output !== '') {
@@ -95,8 +96,8 @@ export default class XTerminal extends React.Component<Props> {
             this.term.writeln('');
         }
 
-        if (this.props.customStream !== prev.customStream) {
-            this._connectToSocket(this.props.customStream);
+        if (this.props.customStream !== '' && this.props.customStream !== undefined) {
+            this._connectToExerciseSocket(this.props.customStream as WebSocket);
         }
     }
 
@@ -120,21 +121,43 @@ export default class XTerminal extends React.Component<Props> {
         );
     }
 
-    _connectToSocket(socket: WebSocket | string) {
-        if (socket === '') {
-            this.streamSocket = new WebSocket(
-                `ws://localhost:4000/connect?id=${this.props.containerId}&bidirectional=${
-                    this.props.bidirectional
-                }`
-            );
-        } else {
-            this.streamSocket = socket as WebSocket;
-            console.log('Connecting to custom stream...');
-        }
+    _connectToExerciseSocket(socket: WebSocket) {
+        this.term.detach(this.streamSocket);
+        console.log(this.term.detach);
+
+        this.exerciseSocket = socket as WebSocket;
+        console.log('Connecting to custom stream...');
+
+        this.exerciseSocket.onopen = () => {
+            this.term.writeln('');
+            this.term.writeln('');
+            this.term.attach(this.exerciseSocket, true, true);
+        };
+
+        this.exerciseSocket.onclose = () => {
+            this.term.detach(this.exerciseSocket);
+            this.term.writeln('');
+            this.term.writeln('Code execution complete, returning to container...');
+            this.term.writeln('');
+            this.term.writeln('>');
+
+            this._connectToMainSocket(false);
+        };
+
+        this.exerciseSocket.onerror = () => {
+            this.term.writeln('EXERCISE CRASHED AND BURNED');
+        };
+    }
+
+    _connectToMainSocket(showLogs: boolean = true) {
+        this.streamSocket = new WebSocket(
+            `ws://localhost:4000/connect?id=${this.props.containerId}&bidirectional=${
+                this.props.bidirectional
+            }&logs=${showLogs}`
+        );
 
         this.streamSocket.onopen = () => {
-            // @ts-ignore
-            this.term.attach(this.streamSocket, true);
+            this.term.attach(this.streamSocket, true, true);
             if (this.props.onConnectText && Array.isArray(this.props.onConnectText)) {
                 this.props.onConnectText.forEach((line) => {
                     this.term.writeln(' ');
@@ -150,13 +173,14 @@ export default class XTerminal extends React.Component<Props> {
             // this.term.writeln(`Press 'Enter' to start`);
         };
         this.streamSocket.onclose = () => {
-            this.term.clear();
-            this.term.writeln('Server disconnected!');
+            // this.term.clear();
+            console.log('Socket closed');
+
             // this._connectToSocket();
         };
         this.streamSocket.onerror = () => {
-            this.term.clear();
-            this.term.writeln('Server disconnected!');
+            // this.term.clear();
+            this.term.writeln('SOCKET CRASHED AND BURNT!');
             // this._connectToSocket();
         };
     }

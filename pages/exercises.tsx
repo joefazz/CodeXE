@@ -6,6 +6,7 @@ const Monaco: any = dynamic(import('../components/Monaco') as any, {
     ssr: false,
     loading: LoadingCode
 });
+import fetch from 'isomorphic-unfetch';
 import Layout from '../components/Layout';
 import XTerminal from '../components/Terminal';
 import { SocketContext } from './_app';
@@ -98,7 +99,23 @@ const Output = styled.div`
     position: relative;
 `;
 
-function Exercises() {
+type IActivity = {
+    _id: string;
+    title: string;
+    description: string;
+    container: string;
+    length: number;
+    entrypoint: string;
+    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    language: string;
+    exercises?: string[];
+};
+
+type Props = {
+    exercises: IActivity[];
+};
+
+function Exercises({ exercises }: Props) {
     const [code, setCode] = useState('// This is the editor');
 
     const container: Context = useContext(SocketContext) as Context;
@@ -114,7 +131,7 @@ function Exercises() {
                     </Info>
                 </Header>
                 <List>
-                    <Link href="/activity?id=5c68546ff110a9003e9a358e">
+                    <Link href={`/activity?id=${exercises[0]._id}`}>
                         <ExerciseCard>
                             <div>
                                 <WindowButtonWrapper>
@@ -133,7 +150,7 @@ function Exercises() {
                             </ExerciseDescription>
                         </ExerciseCard>
                     </Link>
-                    <Link href="/activity?id=1">
+                    <Link href={`/activity?id=${exercises[0]._id}`}>
                         <ExerciseCard>
                             <div>
                                 <WindowButtonWrapper>
@@ -152,7 +169,7 @@ function Exercises() {
                             </ExerciseDescription>
                         </ExerciseCard>
                     </Link>
-                    <Link href="/activity?id=2">
+                    <Link href={`/activity?id=${exercises[0]._id}`}>
                         <ExerciseCard>
                             <div>
                                 <WindowButtonWrapper>
@@ -212,6 +229,18 @@ function Exercises() {
         </Layout>
     );
 }
+
+Exercises.getInitialProps = async () => {
+    const json = await fetch('http://localhost:4000/exercises')
+        .then((res) => res.json())
+        .catch((err) => console.log(err));
+
+    if (!json) {
+        // fake data can go here
+    }
+
+    return { exercises: json };
+};
 
 const CreateCard = styled.div`
     width: 20%;
