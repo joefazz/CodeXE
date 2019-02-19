@@ -41,7 +41,7 @@ type Props = {
 };
 
 function Activity({ activity }: Props) {
-    const { socket, response, id } = useContext(SocketContext) as Context;
+    const { socket, response, id, exerciseId } = useContext(SocketContext) as Context;
 
     const [codeWidth, setCodeWidth] = useState<string | number>('100%');
     const [progress, setProgress] = useState(0);
@@ -49,9 +49,10 @@ function Activity({ activity }: Props) {
     const [code, setCode] = useState(currentExercise.prebakedCode || '# Python code');
     const [stream, setStream] = useState<WebSocket | string>('');
 
+    console.log(exerciseId);
+
     useEffect(() => {
         if (socket) {
-            console.log('here');
             socket.send(JSON.stringify({ type: MessageTypes.CONTAINER_STOP, data: { id } }));
 
             socket.send(
@@ -63,15 +64,26 @@ function Activity({ activity }: Props) {
         } else {
             console.log('no socket');
         }
+
+        /**
+         * I really don't know why this doesn't work but what, fuckin, ever
+         */
+        // return function cleanup() {
+        //     console.log(exerciseId);
+        //     socket.send(
+        //         JSON.stringify({
+        //             type: MessageTypes.EXERCISE_STOP,
+        //             data: { id: exerciseId, containerId: id }
+        //         })
+        //     );
+        // };
     }, [socket]);
 
     useEffect(() => {
         if (response.metaData.saveInfo.succeed) {
             console.log(response);
             let stream = new WebSocket(
-                `ws://localhost:4000/exercise?id=${
-                    response.metaData.exercise.exerciseContainerId
-                }&repl="python"&filename="main.py"`
+                `ws://localhost:4000/exercise?id=${exerciseId}&repl="python"&filename="main.py"`
             );
 
             setStream(stream);
@@ -92,7 +104,7 @@ function Activity({ activity }: Props) {
             JSON.stringify({
                 type: MessageTypes.CODE_SAVE,
                 data: {
-                    id: response.metaData.exercise.exerciseContainerId,
+                    id: exerciseId,
                     filename: activity.entrypoint,
                     code
                 }
@@ -145,9 +157,9 @@ function Activity({ activity }: Props) {
                                 value={code}
                                 onChange={(text: string) => setCode(text)}
                             />
-                            {response.metaData.exercise.exerciseContainerId ? (
+                            {exerciseId ? (
                                 <XTerminal
-                                    containerId={response.metaData.exercise.exerciseContainerId}
+                                    containerId={exerciseId}
                                     bidirectional={true}
                                     output={response.writeData || ''}
                                     customStream={stream}

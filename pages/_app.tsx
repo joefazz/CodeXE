@@ -23,9 +23,10 @@ export default class MyApp extends App {
         status: 'disconnected',
         containerName: '',
         id: '',
+        exerciseId: '',
         response: {
             readData: {},
-            metaData: { saveInfo: {}, exercise: {} },
+            metaData: { saveInfo: {} },
             writeData: { output: 'Output' }
         }
     };
@@ -45,12 +46,19 @@ export default class MyApp extends App {
             switch (type) {
                 case MessageTypes.CONTAINER_START:
                     console.log('Container Started');
-                    const { name, info } = data;
-                    this.setState({
-                        containerName: name,
-                        status: 'connected',
-                        id: info.Config.Hostname
-                    });
+                    if (this.state.containerName === '' && this.state.id === '') {
+                        const { name, info } = data;
+                        this.setState({
+                            containerName: name,
+                            status: 'connected',
+                            id: info.Config.Hostname
+                        });
+                    } else {
+                        this.setState({ status: 'connected' });
+                    }
+                    break;
+                case MessageTypes.CONTAINER_PAUSED:
+                    this.setState({ status: 'idle' });
                     break;
                 case MessageTypes.CONTAINER_EXEC:
                     console.log('Execution returned');
@@ -69,10 +77,7 @@ export default class MyApp extends App {
                     break;
                 case MessageTypes.EXERCISE_CONNECT:
                     this.setState({
-                        response: {
-                            ...this.state.response,
-                            metaData: { ...this.state.response.metaData, exercise: data }
-                        }
+                        exerciseId: data
                     });
                     break;
                 case MessageTypes.CODE_SAVE:

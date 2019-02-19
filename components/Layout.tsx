@@ -68,7 +68,7 @@ type Props = {
  * @param props
  */
 function Layout(props: Props) {
-    const containerContext: Context = useContext(SocketContext) as Context;
+    const { status, containerName }: Context = useContext(SocketContext) as Context;
 
     return (
         <RootPage>
@@ -83,7 +83,11 @@ function Layout(props: Props) {
                                 <span style={{ paddingTop: '2px' }}>Connection Status:</span>{' '}
                                 <ContainerStatus
                                     color={
-                                        containerContext.status === 'disconnected' ? 'red' : 'green'
+                                        status === 'disconnected'
+                                            ? 'red'
+                                            : status === 'idle'
+                                            ? 'orange'
+                                            : 'green'
                                     }
                                 />
                             </StatusWrapper>
@@ -95,9 +99,9 @@ function Layout(props: Props) {
                         closeOnDocumentClick
                     >
                         <span>
-                            {containerContext.containerName === ''
+                            {containerName === ''
                                 ? 'There was a problem'
-                                : `Connected to: ${containerContext.containerName}`}
+                                : `Connected to: ${containerName}`}
                         </span>
                     </Popup>
                 </LeftWrapper>
