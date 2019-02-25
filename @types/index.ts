@@ -1,14 +1,23 @@
+import { SetStateAction } from 'react';
+
+import * as Response from './response';
+import * as Data from './Data';
+
+export { Data, Response };
+
 export type Context = {
     id: string; // Container ID
     status: 'connected' | 'idle' | 'disconnected';
     socket: WebSocket;
     exerciseId: string;
-    response: {
-        readData: any;
-        writeData: any;
-        metaData: any;
-    };
+    response: ContextResponse;
     containerName: string;
+};
+
+export type ContextResponse = {
+    readData: any;
+    writeData: any;
+    metaData: any;
 };
 
 export enum Languages {
@@ -16,6 +25,8 @@ export enum Languages {
     PYTHON = 'python',
     C = 'cpp'
 }
+
+export type ReactSetter<Type> = React.Dispatch<SetStateAction<Type>>;
 
 export enum MessageTypes {
     CONTAINER_START = 'Container.Start',

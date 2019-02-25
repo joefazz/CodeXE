@@ -1,7 +1,7 @@
 import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
-import { MessageTypes } from '../types';
+import { MessageTypes } from '../@types';
 
 export const SocketContext = React.createContext({});
 
