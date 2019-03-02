@@ -3,11 +3,12 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import XTerminal from '../../components/Terminal';
-import { colors } from '../../constants';
+import { colors, languageOptions } from '../../constants';
 import { Button } from '../../styled/Button';
 import LoadingCode from '../../components/LoadingCode';
 import { Split } from '../../styled/Split';
 import { ReactSetter } from '../../@types';
+import { ValueType } from 'react-select/lib/types';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
     loading: LoadingCode
@@ -19,13 +20,13 @@ type Props = {
         codeHeight: string | number;
         code: string;
         language: { value: string; label: string };
-        languageOpts: { value: string; label: string }[];
         containerId: string;
     };
     setters: {
         setCode: ReactSetter<string>;
         setCodeWidth: ReactSetter<number>;
         setCodeHeight: ReactSetter<number>;
+        setLang: ReactSetter<ValueType<{ value: string; label: string }>>;
     };
     functions: {
         saveCode: () => void;
@@ -33,8 +34,8 @@ type Props = {
 };
 
 function SandboxWidget({ data, setters, functions }: Props) {
-    const { code, codeWidth, codeHeight, language, languageOpts, containerId } = data;
-    const { setCode, setCodeHeight, setCodeWidth } = setters;
+    const { code, codeWidth, codeHeight, language, containerId } = data;
+    const { setCode, setCodeHeight, setCodeWidth, setLang } = setters;
     const { saveCode } = functions;
 
     return (
@@ -73,13 +74,10 @@ function SandboxWidget({ data, setters, functions }: Props) {
                     </ControlArea>
                     <ControlArea>
                         <Select
-                            options={languageOpts}
+                            options={languageOptions}
                             menuPlacement={'auto'}
                             value={language}
-                            onChange={(opt) =>
-                                // @ts-ignore
-                                setLang(opt)
-                            }
+                            onChange={(opt) => setLang(opt)}
                         />
                     </ControlArea>
                 </Controls>

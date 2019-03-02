@@ -1,3 +1,5 @@
+import { Languages } from './@types';
+
 export const colors = {
     mainBlue: 'dodgerblue',
     mainGreen: '#3ca56e',
@@ -10,3 +12,9 @@ export const fonts = {
     display: "'Arvo', serif",
     body: "'Josefin Sans', sans-serif"
 };
+
+export const languageOptions: { value: string; label: string }[] = [
+    { value: Languages.JS, label: 'JavaScript' },
+    { value: Languages.PYTHON, label: 'Python' },
+    { value: Languages.C, label: 'C/C++' }
+];

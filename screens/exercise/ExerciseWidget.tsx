@@ -1,41 +1,50 @@
-import React from 'react';
-import dynamic from 'next/dynamic';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { colors, fonts } from '../../constants';
-const Monaco: any = dynamic(import('../../components/Monaco') as any, {
-    ssr: false,
-    loading: LoadingCode
-});
-import XTerminal from '../../components/Terminal';
-import LoadingCode from '../../components/LoadingCode';
-import Modal from '../../components/Modal';
+import Select from 'react-select';
+import { colors, fonts, languageOptions } from '../../constants';
 import Link from 'next/link';
-import { Context, Data, ReactSetter } from '../../@types';
+import { Data, Languages } from '../../@types';
+import { ValueType } from 'react-select/lib/types';
 
 type Props = {
     data: {
-        container: Context;
         exercises: Data.Activity[];
-        code: string;
     };
-    setters: {
-        setCode: ReactSetter<string>;
+    functions: {
+        submitExercises: () => void;
     };
 };
 
-function ExerciseWidget({ data, setters }: Props) {
-    const { exercises, container, code } = data;
-    const { setCode } = setters;
+const TEMP_ACTIVITY_OBJECT = {
+    title: 'Example',
+    description: 'Describe your activity here and press the plus to add more :)',
+    task: 'Print: Hello world!'
+};
+
+function ExerciseWidget({ data, functions }: Props) {
+    const { exercises } = data;
+    const { submitExercises } = functions;
+
+    const [language, setLang] = useState<ValueType<{ value: string; label: string }>>({
+        value: Languages.JS,
+        label: 'JavaScript'
+    });
+    const [activities, setActivities] = useState([TEMP_ACTIVITY_OBJECT]);
+    const [currentActivityIndex, setCurrActivityIndex] = useState(0);
+
+    function addNewActivity() {
+        setActivities((curr) => curr.concat(TEMP_ACTIVITY_OBJECT));
+        setCurrActivityIndex((curr) => curr + 1);
+    }
+
+    function modifyActivity(field: 'title' | 'description' | 'task', value: string) {
+        let copy = activities;
+        copy[currentActivityIndex][field] = value;
+        setActivities(copy);
+    }
 
     return (
         <Page>
-            <Header>
-                <Hero>Exercises</Hero>
-                <Info>
-                    Learn a new langugage with one of our pre made exercises, or, make your own to
-                    share!
-                </Info>
-            </Header>
             <List>
                 <Link href={`/activity?id=${exercises[0]._id}`}>
                     <ExerciseCard>
@@ -94,42 +103,77 @@ function ExerciseWidget({ data, setters }: Props) {
                         </ExerciseDescription>
                     </ExerciseCard>
                 </Link>
-                <Modal
-                    trigger={<CreateCard>Create Exercise</CreateCard>}
-                    title={'Create an exercise to share!'}
-                    onConfirm={() => console.log('create')}
-                >
-                    <span>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Adipisci, illum
-                        autem asperiores eaque tempora labore voluptate doloribus mollitia at ex ea
-                        sunt sint nulla veniam. Pariatur totam velit error tempore.
-                    </span>
-                </Modal>
             </List>
-            <Tutorial>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis natus ipsa quidem
-                soluta! Perferendis reprehenderit cumque distinctio nostrum nulla excepturi?
-                Voluptate est similique dignissimos nemo esse. In ipsam nam voluptatem?
-            </Tutorial>
-            <Code>
-                <Monaco
-                    height="100%"
-                    width="100%"
-                    options={{
-                        minimap: { enabled: false },
-                        fontSize: 18,
-                        lineNumbers: 'off',
-                        cursorStyle: 'block'
-                    }}
-                    language={'javascript'}
-                    onChange={(newVal: string) => setCode(newVal)}
-                    value={code}
-                />
-            </Code>
-            <Output>
-                <XTerminal containerId={container.id} bidirectional={true} />
-            </Output>
-            {/* <Footer>This is a footer which will defo have content in it one day</Footer> */}
+            <CreateArea>
+                <h1>Create your own exercise!</h1>
+                <form onSubmit={(e) => e.preventDefault()}>
+                    <label id="namelabel" htmlFor="name">
+                        Exercise Name
+                    </label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        placeholder="Enter the title of your exercise here"
+                    />
+                    <label id="selectlabel" htmlFor="select">
+                        Select Language
+                    </label>
+                    <Select
+                        id="langselect"
+                        options={languageOptions}
+                        value={language}
+                        onChange={(val) => setLang(val)}
+                    />
+                    <label id="activitylabel" htmlFor="activities">
+                        Activities:
+                    </label>
+                    <CreateActivity id="activities">
+                        <CreateActivityFormWrapper>
+                            <label htmlFor="activityname">Activity Name</label>
+                            <input
+                                type="text"
+                                name="activityname"
+                                id="activityname"
+                                value={activities[currentActivityIndex].title}
+                                onChange={({ target: { value } }) => modifyActivity('title', value)}
+                            />
+                            <label htmlFor="activitydescription">Activity Description</label>
+                            <textarea
+                                name="activitydescription"
+                                id="activitydescription"
+                                value={activities[currentActivityIndex].description}
+                                onChange={({ target: { value } }) =>
+                                    modifyActivity('description', value)
+                                }
+                            />
+                            <label htmlFor="activitytask">Task</label>
+                            <input
+                                type="text"
+                                name="activitytask"
+                                id="activitytask"
+                                value={activities[currentActivityIndex].task}
+                                onChange={({ target: { value } }) => modifyActivity('task', value)}
+                            />
+                        </CreateActivityFormWrapper>
+                        <NumberWrapper>
+                            {activities.map((_, index) => (
+                                <ExerciseNumber
+                                    active={index === currentActivityIndex}
+                                    onClick={() => setCurrActivityIndex(index)}
+                                >
+                                    {index + 1}
+                                </ExerciseNumber>
+                            ))}
+                            {activities.length !== 20 && (
+                                <ExerciseNumber active={false} onClick={() => addNewActivity()}>
+                                    +
+                                </ExerciseNumber>
+                            )}
+                        </NumberWrapper>
+                    </CreateActivity>
+                </form>
+            </CreateArea>
         </Page>
     );
 }
@@ -141,48 +185,11 @@ const Page = styled.div`
     width: 100%;
     grid-template-areas:
         'list list list list'
-        'header header header header'
-        'tutorial code output .'
+        '. create create .'
         '. . . .';
-    grid-template-columns: 1fr 2fr 2fr 20px;
-    grid-template-rows: 2fr 0.7fr 3fr 10px;
+    grid-template-columns: 1fr 2fr 2fr 1fr;
+    grid-template-rows: 2fr 4fr 20px;
     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
-`;
-
-const Header = styled.header`
-    grid-area: header;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-direction: row;
-`;
-
-const Hero = styled.section`
-    grid-area: hero;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: ${colors.backgroundDarkTranslucent};
-    font-family: ${fonts.display};
-    color: white;
-    font-size: 3rem;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    padding: 0 7px;
-    /* box-shadow: 2px 3px 4px black; */
-`;
-
-const Info = styled.span`
-    background-color: ${colors.backgroundDarkTranslucent};
-    font-family: ${fonts.body};
-    font-size: 1.3rem;
-    color: white;
-    margin-top: 20px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    padding: 7px 9px;
 `;
 
 const List = styled.section`
@@ -195,52 +202,138 @@ const List = styled.section`
     background-color: ${colors.backgroundDarkTranslucent};
 `;
 
-const Tutorial = styled.article`
-    grid-area: tutorial;
-    font-family: ${fonts.body};
-    background-color: ${colors.backgroundDarkTranslucent};
-    color: white;
-    font-size: 1.3rem;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-`;
-
-const Code = styled.div`
-    grid-area: code;
-    width: 100%;
-    height: 100%;
-`;
-
-const Output = styled.div`
-    grid-area: output;
-    width: 100%;
-    height: 100%;
-    position: relative;
-`;
-
-const CreateCard = styled.div`
-    width: 20%;
+const CreateArea = styled.section`
+    grid-area: create;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 85%;
-    box-shadow: 2px 2px 5px black;
-    margin-right: 20px;
+    border-radius: 3px;
+    padding: 0 20px;
     background-color: ${colors.backgroundDark};
-    transition: box-shadow 0.3s;
-    border-radius: 5px;
-    border: 3px dashed white;
-    color: white;
-    cursor: pointer;
-    font-size: 2rem;
-    font-weight: light;
-    font-family: ${fonts.display};
+    box-shadow: 0 0 15px black;
 
-    :hover {
-        box-shadow: 5px 5px 8px black;
+    h1 {
+        font-family: ${fonts.display};
+        color: white;
+        font-weight: normal;
+    }
+
+    form {
+        display: grid;
+        grid-template-areas:
+            'namelabel . .'
+            'name name .'
+            'selectlabel . .'
+            'lang lang .'
+            'activitylabel . .'
+            'activities activities activities';
+        grid-template-rows: 20px auto 20px auto 20px 2fr;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 5px;
+
+        label {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-family: ${fonts.body};
+            color: white;
+        }
+
+        #namelabel {
+            grid-area: namelabel;
+        }
+
+        #selectlabel {
+            grid-area: selectlabel;
+        }
+
+        #activitylabel {
+            grid-area: activitylabel;
+        }
+
+        #name {
+            grid-area: name;
+            font-size: 1.5rem;
+        }
+
+        input[type='text'] {
+            background-color: ${colors.backgroundDark};
+            border: 0.3px solid palevioletred;
+            padding: 4px 3px 0 3px;
+            color: white;
+            font-family: ${fonts.body};
+            font-size: 1.2rem;
+        }
+
+        textarea {
+            background-color: ${colors.backgroundDark};
+            border: 0.3px solid palevioletred;
+            color: white;
+            font-family: ${fonts.body};
+            font-size: 1.2rem;
+            resize: none;
+            min-height: 40%;
+        }
+
+        #langselect {
+            grid-area: lang;
+        }
     }
 `;
+
+const CreateActivity = styled.div`
+    grid-area: activities;
+    border-top: 1px solid white;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+`;
+
+const CreateActivityFormWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 75%;
+
+    label {
+        margin-top: 15px;
+    }
+`;
+
+const NumberWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 20%;
+`;
+
+const ExerciseNumber = styled.div<{ active: boolean }>`
+    display: flex;
+    background-color: palevioletred;
+    margin-right: 10px;
+    margin-bottom: 4px;
+    color: white;
+    font-family: ${fonts.display};
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    font-size: 1.3rem;
+    box-shadow: 2px 2px 4px black;
+    border-radius: 6px;
+    justify-content: center;
+    cursor: pointer;
+
+    ${(props) => props.active && `background-color: dodgerblue; box-shadow: 0 0 0;`}
+`;
+
+// const Info = styled.article`
+//     grid-area: tutorial;
+//     font-family: ${fonts.body};
+//     background-color: ${colors.backgroundDarkTranslucent};
+//     color: white;
+//     font-size: 1.3rem;
+//     border-top-right-radius: 5px;
+//     border-bottom-right-radius: 5px;
+// `;
 
 const ExerciseCard = styled.div`
     width: 20%;

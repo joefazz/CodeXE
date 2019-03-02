@@ -1,8 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import fetch from 'isomorphic-unfetch';
 import Layout from '../../components/Layout';
-import { SocketContext } from '../../pages/_app';
-import { Context, Data } from '../../@types';
+import { Data, Languages } from '../../@types';
 import ExerciseWidget from './ExerciseWidget';
 
 type Props = {
@@ -10,13 +9,11 @@ type Props = {
 };
 
 function Exercises({ exercises }: Props) {
-    const [code, setCode] = useState('// This is the editor');
-
-    const container: Context = useContext(SocketContext) as Context;
+    function submitExercises() {}
 
     return (
         <Layout isLoggedIn={false}>
-            <ExerciseWidget data={{ exercises, code, container }} setters={{ setCode }} />
+            <ExerciseWidget data={{ exercises }} functions={{ submitExercises }} />
         </Layout>
     );
 }
@@ -27,7 +24,7 @@ Exercises.getInitialProps = async () => {
         .catch((err) => console.log(err));
 
     if (!json) {
-        // fake data can go here
+        return { exercises: [{ _id: 0 }] };
     }
 
     return { exercises: json };

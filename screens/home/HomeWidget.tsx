@@ -122,11 +122,17 @@ function HomeWidget({ data, setters, functions }: Props) {
                 </FeatureArea>
             </InfoSection>
             <ButtonArea>
-                <Button raised>Log In</Button>
+                <Button raised style={{ boxShadow: '0 0 20px black' }}>
+                    Log In
+                </Button>
                 <Button
                     primary
                     raised
-                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                    style={{
+                        borderTopRightRadius: 0,
+                        borderBottomRightRadius: 0,
+                        boxShadow: '0 0 20px black'
+                    }}
                 >
                     Sign Up
                 </Button>
@@ -178,6 +184,9 @@ const InfoSection = styled.div`
     background-color: ${colors.backgroundDarkTranslucent};
     justify-content: center;
     border-radius: 5px;
+
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 `;
 
 const FeatureArea = styled.ul`

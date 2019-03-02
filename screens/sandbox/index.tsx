@@ -10,13 +10,10 @@ function SandboxPage() {
     const [codeWidth, setCodeWidth] = useState<string | number>('100%');
     const [codeHeight, setCodeHeight] = useState<string | number>('100%');
     const [code, setCode] = useState('// Enter code');
-    const [language, setLang] = useState({ value: Languages.JS, label: 'javascript' });
-
-    const languageOpts = [
-        { value: Languages.JS, label: 'JavaScript' },
-        { value: Languages.PYTHON, label: 'Python' },
-        { value: Languages.C, label: 'C/C++' }
-    ];
+    const [language, setLang] = useState({
+        value: Languages.JS,
+        label: 'javascript'
+    });
 
     function saveCode() {
         const filename =
@@ -41,7 +38,7 @@ function SandboxPage() {
     return (
         <Layout isLoggedIn={false}>
             <SandboxWidget
-                data={{ codeWidth, codeHeight, languageOpts, containerId: id, language, code }}
+                data={{ codeWidth, codeHeight, containerId: id, language, code }}
                 setters={{ setCode, setCodeWidth, setCodeHeight, setLang }}
                 functions={{ saveCode }}
             />
