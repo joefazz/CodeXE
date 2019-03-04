@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Layout from '../../components/Layout';
-import { Data, Languages } from '../../@types';
+import { Data } from '../../@types';
 import ExerciseWidget from './ExerciseWidget';
 
 type Props = {

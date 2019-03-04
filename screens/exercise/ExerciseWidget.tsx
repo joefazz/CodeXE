@@ -5,6 +5,7 @@ import { colors, fonts, languageOptions } from '../../constants';
 import Link from 'next/link';
 import { Data, Languages } from '../../@types';
 import { ValueType } from 'react-select/lib/types';
+import { Button } from '../../styled/Button';
 
 type Props = {
     data: {
@@ -38,9 +39,27 @@ function ExerciseWidget({ data, functions }: Props) {
     }
 
     function modifyActivity(field: 'title' | 'description' | 'task', value: string) {
-        let copy = activities;
-        copy[currentActivityIndex][field] = value;
-        setActivities(copy);
+        let newActivity = { ...activities[currentActivityIndex] };
+        newActivity[field] = value;
+
+        let newArr = [...activities];
+        newArr[currentActivityIndex] = newActivity;
+
+        setActivities(newArr);
+
+        /* 
+            Let this be a lesson. The below technique used to work in class components
+            but it doesn't work for functional (hooks). At a guess I think that the way
+            useState fires a rerender is when it fails a shallow equality check and referencing
+            the array as a copy is a direct copy with the same meta _id. This used to work in 
+            class components I suspect because there's a difference in how the properties of an object
+            eg `this.state.activities` is treated when referenced vs just a direct `activities`
+
+            ThE mOrE yOu KnOw
+        */
+        // let copy = activities;
+        // copy[currentActivityIndex][field] = value;
+        // setActivities(copy);
     }
 
     return (
@@ -125,6 +144,7 @@ function ExerciseWidget({ data, functions }: Props) {
                         value={language}
                         onChange={(val) => setLang(val)}
                     />
+                    <Button type="submit">Create Exercise</Button>
                     <label id="activitylabel" htmlFor="activities">
                         Activities:
                     </label>
@@ -159,13 +179,14 @@ function ExerciseWidget({ data, functions }: Props) {
                         <NumberWrapper>
                             {activities.map((_, index) => (
                                 <ExerciseNumber
+                                    key={index}
                                     active={index === currentActivityIndex}
                                     onClick={() => setCurrActivityIndex(index)}
                                 >
                                     {index + 1}
                                 </ExerciseNumber>
                             ))}
-                            {activities.length !== 20 && (
+                            {activities.length !== 15 && (
                                 <ExerciseNumber active={false} onClick={() => addNewActivity()}>
                                     +
                                 </ExerciseNumber>
@@ -185,10 +206,9 @@ const Page = styled.div`
     width: 100%;
     grid-template-areas:
         'list list list list'
-        '. create create .'
-        '. . . .';
+        '. create create .';
     grid-template-columns: 1fr 2fr 2fr 1fr;
-    grid-template-rows: 2fr 4fr 20px;
+    grid-template-rows: 2fr 4fr;
     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
 `;
 
@@ -210,6 +230,8 @@ const CreateArea = styled.section`
     padding: 0 20px;
     background-color: ${colors.backgroundDark};
     box-shadow: 0 0 15px black;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 
     h1 {
         font-family: ${fonts.display};
@@ -220,15 +242,21 @@ const CreateArea = styled.section`
     form {
         display: grid;
         grid-template-areas:
-            'namelabel . .'
-            'name name .'
-            'selectlabel . .'
-            'lang lang .'
+            'namelabel . submit'
+            'name name submit'
+            'selectlabel . submit'
+            'lang lang submit'
             'activitylabel . .'
             'activities activities activities';
         grid-template-rows: 20px auto 20px auto 20px 2fr;
         grid-template-columns: 2fr 1fr 1fr;
         gap: 5px;
+
+        button {
+            grid-area: submit;
+            margin-left: 20px;
+            box-shadow: 2px 2px 3px black;
+        }
 
         label {
             margin-top: 5px;
@@ -251,7 +279,7 @@ const CreateArea = styled.section`
 
         #name {
             grid-area: name;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
         input[type='text'] {
@@ -260,7 +288,7 @@ const CreateArea = styled.section`
             padding: 4px 3px 0 3px;
             color: white;
             font-family: ${fonts.body};
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         textarea {
@@ -268,9 +296,9 @@ const CreateArea = styled.section`
             border: 0.3px solid palevioletred;
             color: white;
             font-family: ${fonts.body};
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             resize: none;
-            min-height: 40%;
+            min-height: 20%;
         }
 
         #langselect {
