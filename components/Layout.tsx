@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import { fonts } from '../constants';
 import { SocketContext } from '../pages/_app';
-import { Context } from '../@types';
+import { Context } from 'opentypes';
 
 const RootPage = styled.div`
     min-height: 100vh;

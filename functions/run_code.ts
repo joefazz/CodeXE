@@ -1,4 +1,4 @@
-import { Languages, MessageTypes } from '../@types';
+import { Languages, MessageTypes } from 'opentypes';
 
 type Params = {
     id: string;

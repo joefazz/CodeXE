@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Select from 'react-select';
 import { colors, fonts, languageOptions } from '../../constants';
 import Link from 'next/link';
-import { Data, Languages } from '../../@types';
+import { Data, Languages } from 'opentypes';
 import { ValueType } from 'react-select/lib/types';
 import { Button } from '../../styled/Button';
 

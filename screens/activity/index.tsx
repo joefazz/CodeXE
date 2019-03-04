@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { QueryStringMapObject } from 'next';
 import fetch from 'isomorphic-unfetch';
 import { SocketContext } from '../../pages/_app';
-import { Context, MessageTypes, Languages, Response } from '../../@types';
+import { Context, MessageTypes, Languages, Response } from 'opentypes';
 import Layout from '../../components/Layout';
 import ActivityWidget from './ActivityWidget';
 

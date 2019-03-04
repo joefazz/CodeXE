@@ -6,7 +6,7 @@ import XTerminal from '../../components/Terminal';
 import styled from 'styled-components';
 import { colors, fonts } from '../../constants';
 import { Button } from '../../styled/Button';
-import { Response, ReactSetter, Data, ContextResponse } from '../../@types';
+import { Response, ReactSetter, Data, ContextResponse } from 'opentypes';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
     loading: LoadingCode

@@ -1,7 +1,7 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Layout from '../../components/Layout';
-import { Data } from '../../@types';
+import { Data } from 'opentypes';
 import ExerciseWidget from './ExerciseWidget';
 
 type Props = {
