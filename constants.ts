@@ -1,4 +1,4 @@
-import { Languages } from 'opentypes';
+import { Languages } from './@types';
 
 export const colors = {
     mainBlue: 'dodgerblue',

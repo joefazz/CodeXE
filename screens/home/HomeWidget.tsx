@@ -10,7 +10,7 @@ import { Button } from '../../styled/Button';
 import { Footer } from '../../styled/Footer';
 import { colors, fonts } from '../../constants';
 import LoadingCode from '../../components/LoadingCode';
-import { ReactSetter, Languages, ContextResponse } from 'opentypes';
+import { ReactSetter, Languages, ContextResponse } from '../../@types';
 
 type Props = {
     data: { language: Languages; code: string; containerName: string; response: ContextResponse };

@@ -7,7 +7,7 @@ import { colors, languageOptions } from '../../constants';
 import { Button } from '../../styled/Button';
 import LoadingCode from '../../components/LoadingCode';
 import { Split } from '../../styled/Split';
-import { ReactSetter } from 'opentypes';
+import { ReactSetter } from '../../@types';
 import { ValueType } from 'react-select/lib/types';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,

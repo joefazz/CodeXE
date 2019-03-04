@@ -3,16 +3,17 @@ import styled from 'styled-components';
 import Select from 'react-select';
 import { colors, fonts, languageOptions } from '../../constants';
 import Link from 'next/link';
-import { Data, Languages } from 'opentypes';
+import { Data, Languages } from '../../@types';
 import { ValueType } from 'react-select/lib/types';
 import { Button } from '../../styled/Button';
+import { CreateArgs } from '.';
 
 type Props = {
     data: {
         exercises: Data.Activity[];
     };
     functions: {
-        submitExercises: () => void;
+        submitExercises: (args: CreateArgs) => void;
     };
 };
 
@@ -26,6 +27,8 @@ function ExerciseWidget({ data, functions }: Props) {
     const { exercises } = data;
     const { submitExercises } = functions;
 
+    const [title, setTitle] = useState('');
+    const [description, setDesc] = useState('');
     const [language, setLang] = useState<ValueType<{ value: string; label: string }>>({
         value: Languages.JS,
         label: 'JavaScript'
@@ -125,7 +128,18 @@ function ExerciseWidget({ data, functions }: Props) {
             </List>
             <CreateArea>
                 <h1>Create your own exercise!</h1>
-                <form onSubmit={(e) => e.preventDefault()}>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        submitExercises({
+                            title,
+                            description,
+                            // @ts-ignore
+                            language: language.value,
+                            activities
+                        });
+                    }}
+                >
                     <label id="namelabel" htmlFor="name">
                         Exercise Name
                     </label>
@@ -133,6 +147,8 @@ function ExerciseWidget({ data, functions }: Props) {
                         type="text"
                         name="name"
                         id="name"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         placeholder="Enter the title of your exercise here"
                     />
                     <label id="selectlabel" htmlFor="select">
@@ -251,6 +267,10 @@ const CreateArea = styled.section`
         grid-template-rows: 20px auto 20px auto 20px 2fr;
         grid-template-columns: 2fr 1fr 1fr;
         gap: 5px;
+        height: 90%;
+        @media screen and (min-device-width: 1200px) {
+            gap: 15px;
+        }
 
         button {
             grid-area: submit;
@@ -314,6 +334,15 @@ const CreateActivity = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    height: 100%;
+    @media screen and (min-device-width: 1200px) {
+        padding: 0;
+        align-items: center;
+
+        & textarea {
+            min-height: 40% !important;
+        }
+    }
 `;
 
 const CreateActivityFormWrapper = styled.div`
@@ -321,6 +350,7 @@ const CreateActivityFormWrapper = styled.div`
     flex-direction: column;
     align-items: stretch;
     width: 75%;
+    height: 75%;
 
     label {
         margin-top: 15px;

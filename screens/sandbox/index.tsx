@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Layout from '../../components/Layout';
 import { SocketContext } from '../../pages/_app';
-import { Context, MessageTypes, Languages } from 'opentypes';
+import { Context, MessageTypes, Languages } from '../../@types';
 import SandboxWidget from './SandboxWidget';
 
 function SandboxPage() {

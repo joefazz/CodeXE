@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { SocketContext } from '../../pages/_app';
-import { Context, Languages, MessageTypes } from 'opentypes';
+import { Context, Languages, MessageTypes } from '../../@types';
 import { runCode } from '../../functions/run_code';
 import HomeWidget from './HomeWidget';
 
