@@ -1,3 +1,3 @@
-import ActivityPage from '../screens/activity';
+import ActivityPage from '../screens/activities';
 
 export default ActivityPage;

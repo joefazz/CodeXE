@@ -116,8 +116,8 @@ function Layout(props: Props) {
                     <Link href="/sandbox">
                         <NavLink>Sandbox</NavLink>
                     </Link>
-                    <Link href="/exercises">
-                        <NavLink>Exercises</NavLink>
+                    <Link href="/activities">
+                        <NavLink>Activities</NavLink>
                     </Link>
                     {/* <Link href="/profile">
                         <NavLink>Profile</NavLink>
