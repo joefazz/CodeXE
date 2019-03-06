@@ -28,7 +28,7 @@ function ExerciseWidget({ data, functions }: Props) {
     const { submitExercises } = functions;
 
     const [title, setTitle] = useState('');
-    const [description, setDesc] = useState('');
+    const [description] = useState('');
     const [language, setLang] = useState<ValueType<{ value: string; label: string }>>({
         value: Languages.JS,
         label: 'JavaScript'

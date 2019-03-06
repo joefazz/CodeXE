@@ -36,7 +36,7 @@ function Activity({ activity }: Props) {
         /**
          * I really don't know why this doesn't work but what, fuckin, ever
          */
-        // return function cleanup() {
+        // return () => {
         //     console.log(exerciseId);
         //     socket.send(
         //         JSON.stringify({
