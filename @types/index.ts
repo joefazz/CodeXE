@@ -9,7 +9,7 @@ export type Context = {
     id: string; // Container ID
     status: 'connected' | 'idle' | 'disconnected';
     socket: WebSocket;
-    exerciseId: string;
+    activityId: string;
     response: ContextResponse;
     containerName: string;
 };

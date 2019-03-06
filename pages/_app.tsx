@@ -23,7 +23,7 @@ export default class MyApp extends App {
         status: 'disconnected',
         containerName: '',
         id: '',
-        exerciseId: '',
+        activityId: '',
         response: {
             readData: {},
             metaData: { saveInfo: {} },
@@ -77,7 +77,7 @@ export default class MyApp extends App {
                     break;
                 case MessageTypes.EXERCISE_CONNECT:
                     this.setState({
-                        exerciseId: data
+                        activityId: data
                     });
                     break;
                 case MessageTypes.CODE_SAVE:

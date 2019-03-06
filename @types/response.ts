@@ -1,12 +1,13 @@
-import { Exercise } from './Data';
+import { Activity } from './Data';
 import { Languages } from '@types';
 
-export interface Activity {
+export interface Exercise {
     language: Languages;
     difficulty: string;
     length: number;
     description: string;
     title: string;
-    exercises: Exercise[];
+    container: string;
+    activities: Activity[];
     entrypoint: string;
 }

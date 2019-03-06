@@ -17,9 +17,9 @@ type Props = {
         code: string;
         progress: number;
         stream: string | WebSocket;
-        currentExercise: Data.Exercise;
+        currentActivity: Data.Activity;
         response: ContextResponse;
-        activity: Response.Activity;
+        exercise: Response.Exercise;
         containerId: string;
     };
     setters: { setCodeWidth: ReactSetter<number>; setCode: ReactSetter<string> };
@@ -28,7 +28,7 @@ type Props = {
 };
 
 function ActivityWidget({ data, setters, presentation, functions }: Props) {
-    const { activity, currentExercise, code, stream, response, containerId, progress } = data;
+    const { exercise, currentActivity, code, stream, response, containerId, progress } = data;
     const { setCodeWidth, setCode } = setters;
     const { codeWidth } = presentation;
     const { nextExercise, saveCode } = functions;
@@ -43,9 +43,9 @@ function ActivityWidget({ data, setters, presentation, functions }: Props) {
         >
             <TutorialArea>
                 <TaskArea>
-                    <h1>{currentExercise.title}</h1>
-                    <span>{currentExercise.description}</span>
-                    <code>{currentExercise.task}</code>
+                    <h1>{currentActivity.title}</h1>
+                    <span>{currentActivity.description}</span>
+                    <code>{currentActivity.task}</code>
                     <Button
                         primary
                         style={{ flex: 1, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
@@ -66,7 +66,7 @@ function ActivityWidget({ data, setters, presentation, functions }: Props) {
                         style={{ height: '80%' }}
                     >
                         <Monaco
-                            language={'python'}
+                            language={exercise.language}
                             width={codeWidth}
                             height={'100%'}
                             options={{
@@ -86,13 +86,13 @@ function ActivityWidget({ data, setters, presentation, functions }: Props) {
                             />
                         ) : (
                             <LoadingTerm>
-                                <span>Loading: {activity.title} Machine...</span>
+                                <span>Loading: {exercise.title} Machine...</span>
                             </LoadingTerm>
                         )}
                     </Split>
                 </CodeArea>
                 <ActivityInfo>
-                    <h1>{activity.title}</h1>
+                    <h1>{exercise.title}</h1>
 
                     <ButtonArea>
                         <Button success onClick={() => saveCode()}>
@@ -102,9 +102,9 @@ function ActivityWidget({ data, setters, presentation, functions }: Props) {
 
                     <Details>
                         <code>
-                            {progress}/{activity.length}
+                            {progress}/{exercise.length}
                         </code>
-                        <code>Difficulty: {activity.difficulty}</code>
+                        <code>Difficulty: {exercise.difficulty}</code>
                     </Details>
                 </ActivityInfo>
             </SecondPane>
@@ -163,7 +163,7 @@ const SecondPane = styled.div`
 `;
 
 const CodeArea = styled.div`
-    flex: 13;
+    flex: 9;
 `;
 
 const ActivityInfo = styled.div`

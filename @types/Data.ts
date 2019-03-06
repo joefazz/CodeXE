@@ -1,4 +1,4 @@
-export interface Exercise {
+export interface Activity {
     id: number;
     title: string;
     description: string;
@@ -8,7 +8,7 @@ export interface Exercise {
     requiredCode?: string[];
 }
 
-export interface Activity {
+export interface Exercise {
     _id: string;
     title: string;
     description: string;
@@ -17,5 +17,5 @@ export interface Activity {
     entrypoint: string;
     difficulty: 'beginner' | 'intermediate' | 'advanced';
     language: string;
-    exercises?: string[];
+    activities?: string[];
 }

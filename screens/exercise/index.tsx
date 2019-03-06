@@ -5,7 +5,7 @@ import { Data, Languages } from '../../@types';
 import ExerciseWidget from './ExerciseWidget';
 
 type Props = {
-    exercises: Data.Activity[];
+    exercises: Data.Exercise[];
 };
 
 type IActivity = {
@@ -23,7 +23,12 @@ export type CreateArgs = {
 
 function Exercises({ exercises }: Props) {
     function submitExercises(args: CreateArgs) {
-        fetch('http://localhost:4000/create', { method: 'post', body: JSON.stringify(args) })
+        console.log(args);
+        fetch('http://localhost:4000/create', {
+            method: 'post',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify(args)
+        })
             .then((res) => res.json())
             .then((json) => console.log(json));
     }

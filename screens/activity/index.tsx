@@ -7,16 +7,16 @@ import Layout from '../../components/Layout';
 import ActivityWidget from './ActivityWidget';
 
 type Props = {
-    activity: Response.Activity;
+    exercise: Response.Exercise;
 };
 
-function Activity({ activity }: Props) {
-    const { socket, response, id, exerciseId } = useContext(SocketContext) as Context;
+function Activity({ exercise }: Props) {
+    const { socket, response, id, activityId } = useContext(SocketContext) as Context;
 
     const [codeWidth, setCodeWidth] = useState<string | number>('100%');
     const [progress, setProgress] = useState(0);
-    const [currentExercise, setCurrentExercise] = useState(activity.exercises[0]);
-    const [code, setCode] = useState(currentExercise.prebakedCode || '# Python code');
+    const [currentActivity, setCurrentActivity] = useState(exercise.activities[0]);
+    const [code, setCode] = useState(currentActivity.prebakedCode || '# Python code');
     const [stream, setStream] = useState<WebSocket | string>('');
 
     useEffect(() => {
@@ -26,7 +26,7 @@ function Activity({ activity }: Props) {
             socket.send(
                 JSON.stringify({
                     type: MessageTypes.EXERCISE_START,
-                    data: { exerciseID: 0 }
+                    data: { image: exercise.container }
                 })
             );
         } else {
@@ -50,8 +50,17 @@ function Activity({ activity }: Props) {
     useEffect(() => {
         if (response.metaData.saveInfo.succeed) {
             console.log(response);
+            const repl =
+                exercise.language === Languages.JS
+                    ? 'node'
+                    : exercise.language === Languages.C
+                    ? 'gcc'
+                    : exercise.language;
+
             let stream = new WebSocket(
-                `ws://localhost:4000/exercise?id=${exerciseId}&repl="python"&filename="main.py"`
+                `ws://localhost:4000/exercise?id=${activityId}&repl="${repl}"&filename="${
+                    exercise.entrypoint
+                }"`
             );
 
             setStream(stream);
@@ -60,10 +69,10 @@ function Activity({ activity }: Props) {
 
     function nextExercise() {
         setProgress((prev) => prev + 1);
-        const exercise = activity.exercises[progress];
-        setCurrentExercise(activity.exercises[progress]);
-        if (exercise.prebakedCode) {
-            setCode(exercise.prebakedCode);
+        const activity = exercise.activities[progress];
+        setCurrentActivity(exercise.activities[progress]);
+        if (activity.prebakedCode) {
+            setCode(activity.prebakedCode);
         }
     }
 
@@ -72,8 +81,8 @@ function Activity({ activity }: Props) {
             JSON.stringify({
                 type: MessageTypes.CODE_SAVE,
                 data: {
-                    id: exerciseId,
-                    filename: activity.entrypoint,
+                    id: activityId,
+                    filename: exercise.entrypoint,
                     code
                 }
             })
@@ -84,13 +93,13 @@ function Activity({ activity }: Props) {
         <Layout isLoggedIn={false}>
             <ActivityWidget
                 data={{
-                    activity,
+                    exercise,
                     progress,
-                    currentExercise,
+                    currentActivity,
                     code,
                     stream,
                     response,
-                    containerId: exerciseId
+                    containerId: activityId
                 }}
                 presentation={{ codeWidth }}
                 setters={{ setCode, setCodeWidth }}
@@ -101,17 +110,19 @@ function Activity({ activity }: Props) {
 }
 
 Activity.getInitialProps = async ({ query }: { query: QueryStringMapObject }) => {
-    const json = await fetch(`http://localhost:4000/activity?id=${query.id}`)
+    const json = await fetch(`http://localhost:4000/exercise?id=${query.id}`)
         .then((res) => res.json())
         .catch((err) => console.log(err));
 
+    console.log(json);
     if (!json) {
         // Fake Data
-        const fake: Response.Activity = {
+        const fake: Response.Exercise = {
             description: 'An introduction to the Python programming language',
             difficulty: 'beginner',
             entrypoint: 'main.py',
-            exercises: [
+            container: 'python_basics',
+            activities: [
                 {
                     title: 'Strings 101',
                     description:
@@ -129,7 +140,7 @@ Activity.getInitialProps = async ({ query }: { query: QueryStringMapObject }) =>
         return { activity: fake };
     }
 
-    return { activity: json };
+    return { exercise: json };
 };
 
 export default Activity;

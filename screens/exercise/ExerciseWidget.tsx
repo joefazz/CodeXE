@@ -10,7 +10,7 @@ import { CreateArgs } from '.';
 
 type Props = {
     data: {
-        exercises: Data.Activity[];
+        exercises: Data.Exercise[];
     };
     functions: {
         submitExercises: (args: CreateArgs) => void;
@@ -268,9 +268,9 @@ const CreateArea = styled.section`
         grid-template-columns: 2fr 1fr 1fr;
         gap: 5px;
         height: 90%;
-        @media screen and (min-device-width: 1200px) {
+        /* @media screen and (min-device-height: 900px) {
             gap: 15px;
-        }
+        } */
 
         button {
             grid-area: submit;
@@ -335,14 +335,14 @@ const CreateActivity = styled.div`
     flex-direction: row;
     justify-content: space-between;
     height: 100%;
-    @media screen and (min-device-width: 1200px) {
+    /* @media screen and (min-device-height: 900px) {
         padding: 0;
         align-items: center;
 
         & textarea {
             min-height: 40% !important;
         }
-    }
+    } */
 `;
 
 const CreateActivityFormWrapper = styled.div`
