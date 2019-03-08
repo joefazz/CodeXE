@@ -6,6 +6,10 @@ import { Data, Languages } from '../../@types';
 import { Button } from '../../styled/Button';
 import { Selector } from '../../styled/Selector';
 import { CreateArgs } from '.';
+import dynamic from 'next/dynamic';
+const Monaco: any = dynamic(import('../../components/Monaco') as any, {
+    ssr: false
+});
 
 type Props = {
     data: {
@@ -19,7 +23,8 @@ type Props = {
 const TEMP_ACTIVITY_OBJECT = {
     title: 'Example',
     description: 'Describe your activity here and press the plus to add more :)',
-    task: 'Print: Hello world!'
+    task: 'Print: Hello world!',
+    prebakedCode: ''
 };
 
 function ActivityWidget({ data, functions }: Props) {
@@ -37,7 +42,10 @@ function ActivityWidget({ data, functions }: Props) {
         setCurrActivityIndex((curr) => curr + 1);
     }
 
-    function modifyActivity(field: 'title' | 'description' | 'task', value: string) {
+    function modifyActivity(
+        field: 'title' | 'description' | 'task' | 'prebakedCode',
+        value: string
+    ) {
         let newActivity = { ...activities[currentActivityIndex] };
         newActivity[field] = value;
 
@@ -130,8 +138,7 @@ function ActivityWidget({ data, functions }: Props) {
                         submitExercises({
                             title,
                             description,
-                            // @ts-ignore
-                            language: language.value,
+                            language,
                             activities
                         });
                     }}
@@ -192,6 +199,22 @@ function ActivityWidget({ data, functions }: Props) {
                                 value={activities[currentActivityIndex].task}
                                 onChange={({ target: { value } }) => modifyActivity('task', value)}
                             />
+                            <label htmlFor="prebaked">Placeholder code</label>
+                            <Monaco
+                                id="prebaked"
+                                language={language}
+                                width={'100%'}
+                                height={'100%'}
+                                options={{
+                                    fontSize: 14,
+                                    minimap: { enabled: false },
+                                    cursorStyle: 'block'
+                                }}
+                                onChange={(newVal: string) =>
+                                    modifyActivity('prebakedCode', newVal)
+                                }
+                                value={activities[currentActivityIndex].prebakedCode}
+                            />
                         </CreateActivityFormWrapper>
                         <NumberWrapper>
                             {activities.map((_, index) => (
@@ -222,18 +245,21 @@ const Page = styled.div`
     height: 100%;
     width: 100%;
     grid-template-areas:
-        'list list list list'
-        '. create create .';
-    grid-template-columns: 1fr 2fr 2fr 1fr;
-    grid-template-rows: 2fr 4fr;
+        'list . . . .'
+        'list . create create .'
+        'list . create create .'
+        'list . create create .'
+        'list . . . .';
+    grid-template-columns: 1fr 20px 3fr 1fr 20px;
+    grid-template-rows: 10px 2fr 3fr 2fr 10px;
     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
 `;
 
 const List = styled.section`
     grid-area: list;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
     box-shadow: 0 5px 12px black;
     background-color: ${colors.backgroundDarkTranslucent};
@@ -247,8 +273,6 @@ const CreateArea = styled.section`
     padding: 0 20px;
     background-color: ${colors.backgroundDark};
     box-shadow: 0 0 15px black;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
 
     h1 {
         font-family: ${fonts.display};
@@ -348,21 +372,24 @@ const CreateActivity = styled.div`
 
 const CreateActivityFormWrapper = styled.div`
     display: flex;
+    flex: 3;
     flex-direction: column;
     align-items: stretch;
     width: 75%;
-    height: 75%;
+    height: 100%;
 
     label {
-        margin-top: 15px;
+        margin-top: 15px !important;
     }
 `;
 
 const NumberWrapper = styled.div`
     display: flex;
+    flex: 1;
     flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
     flex-wrap: wrap;
-    max-width: 20%;
 `;
 
 const ExerciseNumber = styled.div<{ active: boolean }>`
@@ -372,10 +399,10 @@ const ExerciseNumber = styled.div<{ active: boolean }>`
     margin-bottom: 4px;
     color: white;
     font-family: ${fonts.display};
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     align-items: center;
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     box-shadow: 2px 2px 4px black;
     border-radius: 6px;
     justify-content: center;
@@ -395,11 +422,11 @@ const ExerciseNumber = styled.div<{ active: boolean }>`
 // `;
 
 const ExerciseCard = styled.div`
-    width: 20%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    height: 85%;
+    height: 20%;
     box-shadow: 2px 2px 5px black;
     margin-right: 20px;
     background-color: ${colors.mainBlue};
@@ -446,6 +473,7 @@ const ExerciseDescription = styled.code`
     color: white;
     padding-left: 10px;
     font-size: 1rem;
+
     ul {
         padding: 0;
 

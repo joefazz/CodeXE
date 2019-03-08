@@ -1,8 +1,9 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Layout from '../../components/Layout';
-import { Data, Languages } from '../../@types';
+import { Data } from '../../@types';
 import ActivityWidget from './ActivityWidget';
+import Router from 'next/router';
 
 type Props = {
     exercises: Data.Exercise[];
@@ -17,7 +18,7 @@ type IActivity = {
 export type CreateArgs = {
     title: string;
     description: string;
-    language: Languages;
+    language: string;
     activities: IActivity[];
 };
 
@@ -30,7 +31,7 @@ function ActivityPage({ exercises }: Props) {
             body: JSON.stringify(args)
         })
             .then((res) => res.json())
-            .then((json) => console.log(json));
+            .then((json) => Router.push(`/exercise?id=${json.id}`));
     }
 
     return (
