@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Select from 'react-select';
 import { colors, fonts, languageOptions } from '../../constants';
 import Link from 'next/link';
 import { Data, Languages } from '../../@types';
-import { ValueType } from 'react-select/lib/types';
 import { Button } from '../../styled/Button';
+import { Selector } from '../../styled/Selector';
 import { CreateArgs } from '.';
 
 type Props = {
@@ -29,10 +28,7 @@ function ActivityWidget({ data, functions }: Props) {
 
     const [title, setTitle] = useState('');
     const [description] = useState('');
-    const [language, setLang] = useState<ValueType<{ value: string; label: string }>>({
-        value: Languages.JS,
-        label: 'JavaScript'
-    });
+    const [language, setLang] = useState(Languages.JS as string);
     const [activities, setActivities] = useState([TEMP_ACTIVITY_OBJECT]);
     const [currentActivityIndex, setCurrActivityIndex] = useState(0);
 
@@ -154,12 +150,17 @@ function ActivityWidget({ data, functions }: Props) {
                     <label id="selectlabel" htmlFor="select">
                         Select Language
                     </label>
-                    <Select
+                    <Selector
                         id="langselect"
-                        options={languageOptions}
                         value={language}
-                        onChange={(val) => setLang(val)}
-                    />
+                        onChange={(e) => setLang(e.target.value)}
+                    >
+                        {languageOptions.map((opt) => (
+                            <option value={opt.value} key={opt.value}>
+                                {opt.label}
+                            </option>
+                        ))}
+                    </Selector>
                     <Button type="submit">Create Exercise</Button>
                     <label id="activitylabel" htmlFor="activities">
                         Activities:
@@ -304,7 +305,7 @@ const CreateArea = styled.section`
 
         input[type='text'] {
             background-color: ${colors.backgroundDark};
-            border: 0.3px solid palevioletred;
+            border: 1px solid palevioletred;
             padding: 4px 3px 0 3px;
             color: white;
             font-family: ${fonts.body};
@@ -313,12 +314,12 @@ const CreateArea = styled.section`
 
         textarea {
             background-color: ${colors.backgroundDark};
-            border: 0.3px solid palevioletred;
+            border: 1px solid palevioletred;
             color: white;
             font-family: ${fonts.body};
             font-size: 1.1rem;
             resize: none;
-            min-height: 20%;
+            min-height: 25%;
         }
 
         #langselect {
@@ -330,11 +331,11 @@ const CreateArea = styled.section`
 const CreateActivity = styled.div`
     grid-area: activities;
     border-top: 1px solid white;
-    padding-top: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 100%;
+    height: 90%;
+    padding-top: 10px;
     /* @media screen and (min-device-height: 900px) {
         padding: 0;
         align-items: center;

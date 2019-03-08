@@ -10,16 +10,13 @@ function SandboxPage() {
     const [codeWidth, setCodeWidth] = useState<string | number>('100%');
     const [codeHeight, setCodeHeight] = useState<string | number>('100%');
     const [code, setCode] = useState('// Enter code');
-    const [language, setLang] = useState({
-        value: Languages.JS,
-        label: 'javascript'
-    });
+    const [language, setLang] = useState(Languages.JS as string);
 
     function saveCode() {
         const filename =
-            language.value === Languages.JS
+            language === Languages.JS
                 ? 'index.js'
-                : language.value === Languages.PYTHON
+                : language === Languages.PYTHON
                 ? 'main.py'
                 : 'main.c';
 

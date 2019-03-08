@@ -1,5 +1,4 @@
 import React from 'react';
-import Select from 'react-select';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import XTerminal from '../../components/Terminal';
@@ -8,7 +7,7 @@ import { Button } from '../../styled/Button';
 import LoadingCode from '../../components/LoadingCode';
 import { Split } from '../../styled/Split';
 import { ReactSetter } from '../../@types';
-import { ValueType } from 'react-select/lib/types';
+import { Selector } from '../../styled/Selector';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
     loading: LoadingCode
@@ -19,14 +18,14 @@ type Props = {
         codeWidth: string | number;
         codeHeight: string | number;
         code: string;
-        language: { value: string; label: string };
+        language: string;
         containerId: string;
     };
     setters: {
         setCode: ReactSetter<string>;
         setCodeWidth: ReactSetter<number>;
         setCodeHeight: ReactSetter<number>;
-        setLang: ReactSetter<ValueType<{ value: string; label: string }>>;
+        setLang: ReactSetter<string>;
     };
     functions: {
         saveCode: () => void;
@@ -47,7 +46,7 @@ function SandboxWidget({ data, setters, functions }: Props) {
                 onChange={(size) => setCodeHeight(size)}
             >
                 <Monaco
-                    language={language.value}
+                    language={language}
                     width={codeWidth}
                     height={codeHeight}
                     options={{
@@ -73,12 +72,13 @@ function SandboxWidget({ data, setters, functions }: Props) {
                         </Button>
                     </ControlArea>
                     <ControlArea>
-                        <Select
-                            options={languageOptions}
-                            menuPlacement={'auto'}
-                            value={language}
-                            onChange={(opt) => setLang(opt)}
-                        />
+                        <Selector value={language} onChange={(e) => setLang(e.target.value)}>
+                            {languageOptions.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </option>
+                            ))}
+                        </Selector>
                     </ControlArea>
                 </Controls>
             </Split>
