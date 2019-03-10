@@ -107,6 +107,9 @@ export default class MyApp extends App {
     }
 
     componentWillUnmount() {
+        this.socket.send(
+            JSON.stringify({ message: 'Container.Stop', data: { id: this.state.id } })
+        );
         this.socket.close();
     }
 

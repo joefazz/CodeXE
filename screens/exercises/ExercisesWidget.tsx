@@ -27,7 +27,7 @@ const TEMP_ACTIVITY_OBJECT = {
     prebakedCode: ''
 };
 
-function ActivityWidget({ data, functions }: Props) {
+function ExercisesWidget({ data, functions }: Props) {
     const { exercises } = data;
     const { submitExercises } = functions;
 
@@ -72,7 +72,7 @@ function ActivityWidget({ data, functions }: Props) {
     return (
         <Page>
             <List>
-                <Link href={`/activity?id=${exercises[0]._id}`}>
+                <Link href={`/exercise?id=${exercises[0]._id}`}>
                     <ExerciseCard>
                         <div>
                             <WindowButtonWrapper>
@@ -91,7 +91,7 @@ function ActivityWidget({ data, functions }: Props) {
                         </ExerciseDescription>
                     </ExerciseCard>
                 </Link>
-                <Link href={`/activity?id=${exercises[0]._id}`}>
+                <Link href={`/exercise?id=${exercises[0]._id}`}>
                     <ExerciseCard>
                         <div>
                             <WindowButtonWrapper>
@@ -110,7 +110,7 @@ function ActivityWidget({ data, functions }: Props) {
                         </ExerciseDescription>
                     </ExerciseCard>
                 </Link>
-                <Link href={`/activity?id=${exercises[0]._id}`}>
+                <Link href={`/exercise?id=${exercises[0]._id}`}>
                     <ExerciseCard>
                         <div>
                             <WindowButtonWrapper>
@@ -483,4 +483,4 @@ const ExerciseDescription = styled.code`
     }
 `;
 
-export default ActivityWidget;
+export default ExercisesWidget;

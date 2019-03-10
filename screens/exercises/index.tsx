@@ -2,7 +2,7 @@ import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Layout from '../../components/Layout';
 import { Data } from '../../@types';
-import ActivityWidget from './ActivityWidget';
+import ActivityWidget from './ExercisesWidget';
 import Router from 'next/router';
 
 type Props = {
@@ -22,7 +22,7 @@ export type CreateArgs = {
     activities: IActivity[];
 };
 
-function ActivityPage({ exercises }: Props) {
+function Exercises({ exercises }: Props) {
     function submitExercises(args: CreateArgs) {
         console.log(args);
         fetch('http://localhost:4000/create', {
@@ -41,7 +41,7 @@ function ActivityPage({ exercises }: Props) {
     );
 }
 
-ActivityPage.getInitialProps = async () => {
+Exercises.getInitialProps = async () => {
     const json = await fetch('http://localhost:4000/exercises')
         .then((res) => res.json())
         .catch((err) => console.log(err));
@@ -53,4 +53,4 @@ ActivityPage.getInitialProps = async () => {
     return { exercises: json };
 };
 
-export default ActivityPage;
+export default Exercises;

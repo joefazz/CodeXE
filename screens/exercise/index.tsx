@@ -20,7 +20,8 @@ function Exercise({ exercise }: Props) {
     const [stream, setStream] = useState<WebSocket | string>('');
 
     useEffect(() => {
-        if (socket) {
+        console.log(socket, activityId);
+        if (socket && activityId === '') {
             socket.send(JSON.stringify({ type: MessageTypes.CONTAINER_STOP, data: { id } }));
 
             socket.send(
@@ -29,23 +30,20 @@ function Exercise({ exercise }: Props) {
                     data: { image: exercise.container }
                 })
             );
-        } else {
-            console.log('no socket');
         }
 
-        /**
-         * I really don't know why this doesn't work but what, fuckin, ever
-         */
-        // return () => {
-        //     console.log(exerciseId);
-        //     socket.send(
-        //         JSON.stringify({
-        //             type: MessageTypes.EXERCISE_STOP,
-        //             data: { id: exerciseId, containerId: id }
-        //         })
-        //     );
-        // };
-    }, [socket]);
+        return function cleanup() {
+            if (activityId) {
+                console.log('DETATCHING FROM EXERCISE');
+                socket.send(
+                    JSON.stringify({
+                        type: MessageTypes.EXERCISE_STOP,
+                        data: { id: activityId, containerId: id }
+                    })
+                );
+            }
+        };
+    }, [socket, activityId]);
 
     useEffect(() => {
         if (response.metaData.saveInfo.succeed) {

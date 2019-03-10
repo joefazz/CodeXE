@@ -11,6 +11,7 @@ import Popup from 'reactjs-popup';
 import { fonts } from '../constants';
 import { SocketContext } from '../pages/_app';
 import { Context } from '../@types';
+import usePageVisibility from '../functions/usePageVisibility';
 
 const RootPage = styled.div`
     min-height: 100vh;
@@ -35,6 +36,7 @@ const StatusWrapper = styled.div`
     padding: 5px 5px;
     border: 1px solid white;
     cursor: help;
+    box-shadow: 2px 2px 3px black;
 `;
 
 const ContainerStatus = styled.div`
@@ -70,6 +72,19 @@ type Props = {
 function Layout(props: Props) {
     const { status, containerName }: Context = useContext(SocketContext) as Context;
 
+    // @ts-ignore
+    if (process.browser) {
+        function onHidden() {
+            document.title = 'We out';
+        }
+
+        function onVisible() {
+            document.title = 'OpenStudy';
+        }
+
+        usePageVisibility(onHidden, onVisible);
+    }
+
     return (
         <RootPage>
             <Header>
@@ -101,6 +116,8 @@ function Layout(props: Props) {
                         <span>
                             {containerName === ''
                                 ? 'There was a problem'
+                                : status === 'idle'
+                                ? `${containerName} has been paused while you do an exercise`
                                 : `Connected to: ${containerName}`}
                         </span>
                     </Popup>
@@ -116,8 +133,8 @@ function Layout(props: Props) {
                     <Link href="/sandbox">
                         <NavLink>Sandbox</NavLink>
                     </Link>
-                    <Link href="/activities">
-                        <NavLink>Activities</NavLink>
+                    <Link href="/exercises">
+                        <NavLink>Exercises</NavLink>
                     </Link>
                     {/* <Link href="/profile">
                         <NavLink>Profile</NavLink>
