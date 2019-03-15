@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import { fonts } from '../constants';
 import { SocketContext } from '../pages/_app';
-import { Context } from '../@types';
+import { Context, MessageTypes } from '../@types';
 import usePageVisibility from '../functions/usePageVisibility';
 
 const RootPage = styled.div`
@@ -70,19 +70,23 @@ type Props = {
  * @param props
  */
 function Layout(props: Props) {
-    const { status, containerName }: Context = useContext(SocketContext) as Context;
+    const { status, containerName, socket, id } = useContext(SocketContext) as Context;
 
     // @ts-ignore
     if (process.browser) {
         function onHidden() {
-            document.title = 'We out';
+            if (socket) {
+                socket.send(JSON.stringify({ type: MessageTypes.CONTAINER_PAUSE, data: { id } }));
+            }
         }
 
         function onVisible() {
-            document.title = 'OpenStudy';
+            if (socket) {
+                socket.send(JSON.stringify({ type: MessageTypes.CONTAINER_RESUME, data: { id } }));
+            }
         }
 
-        usePageVisibility(onHidden, onVisible);
+        usePageVisibility(onHidden, onVisible, [socket]);
     }
 
     return (

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-function usePageVisibility(onHidden: () => void, onVisible: () => void) {
+function usePageVisibility(onHidden: () => void, onVisible: () => void, dependancies: unknown[]) {
     const visibilityChange = 'visibilitychange';
 
     function onVisibilityChange() {
@@ -17,7 +17,7 @@ function usePageVisibility(onHidden: () => void, onVisible: () => void) {
         return function clean() {
             document.removeEventListener(visibilityChange, () => onVisibilityChange());
         };
-    }, []);
+    }, [...dependancies]);
 }
 
 export default usePageVisibility;

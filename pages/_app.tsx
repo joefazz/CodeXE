@@ -57,8 +57,11 @@ export default class MyApp extends App {
                         this.setState({ status: 'connected' });
                     }
                     break;
-                case MessageTypes.CONTAINER_PAUSED:
+                case MessageTypes.CONTAINER_PAUSE:
                     this.setState({ status: 'idle' });
+                    break;
+                case MessageTypes.CONTAINER_RESUME:
+                    this.setState({ status: 'connected' });
                     break;
                 case MessageTypes.CONTAINER_EXEC:
                     console.log('Execution returned');

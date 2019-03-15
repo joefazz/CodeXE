@@ -55,6 +55,7 @@ function Exercise({ exercise }: Props) {
                     ? 'gcc'
                     : exercise.language;
 
+            console.log(activityId, repl, exercise.entrypoint)
             let stream = new WebSocket(
                 `ws://localhost:4000/exercise?id=${activityId}&repl="${repl}"&filename="${
                     exercise.entrypoint
