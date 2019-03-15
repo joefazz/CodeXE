@@ -83,6 +83,11 @@ export default class MyApp extends App {
                         activityId: data
                     });
                     break;
+                case MessageTypes.EXERCISE_STOP:
+                    this.setState({
+                        activityId: ''
+                    });
+                    break;
                 case MessageTypes.CODE_SAVE:
                     console.log('Code save returned');
                     this.setState({

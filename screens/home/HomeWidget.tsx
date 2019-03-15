@@ -140,8 +140,8 @@ function HomeWidget({ data, setters, functions }: Props) {
             <Footer>
                 <p>
                     OpenStudy is the final year project of{' '}
-                    <a href="https://twitter.com/purefazz">Joe Fazzino</a>, he is not responsible
-                    for anything evil that you decide to do.
+                    <a href="https://twitter.com/purefazz">Joe Fazzino</a>, it's made to help people
+                    learn how to code without installing anything!
                 </p>
             </Footer>
         </Page>
