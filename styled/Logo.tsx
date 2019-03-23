@@ -7,4 +7,5 @@ export const Logo = styled.a`
     font-family: ${fonts.display};
     color: white;
     text-decoration-line: none;
+    cursor: pointer;
 `;
