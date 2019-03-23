@@ -18,3 +18,5 @@ export const languageOptions: { value: string; label: string }[] = [
     { value: Languages.PYTHON, label: 'Python' },
     { value: Languages.C, label: 'C/C++' }
 ];
+
+export const DOMAIN = `https://midgard.codexe.run`;
