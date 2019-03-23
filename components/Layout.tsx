@@ -94,7 +94,7 @@ function Layout(props: Props) {
             <Header>
                 <LeftWrapper>
                     <Link href="/">
-                        <Logo>OpenStudy</Logo>
+                        <Logo>Codexe</Logo>
                     </Link>
                     <Popup
                         trigger={() => (

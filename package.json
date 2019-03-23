@@ -1,5 +1,5 @@
 {
-    "name": "OpenStudy",
+    "name": "Codexe",
     "scripts": {
         "dev": "nodemon",
         "build": "next build && tsc --project tsconfig.server.json",

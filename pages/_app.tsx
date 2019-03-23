@@ -126,7 +126,7 @@ export default class MyApp extends App {
         return (
             <Container>
                 <Head>
-                    <title>OpenStudy</title>
+                    <title>Codexe</title>
                     <link
                         href="https://fonts.googleapis.com/css?family=Josefin+Sans|Arvo"
                         rel="stylesheet"
