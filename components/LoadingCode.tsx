@@ -14,7 +14,6 @@ const CodeLoad = styled.div`
 
 const VSLoader = styled.img`
     width: 20%;
-    height: auto;
     background-color: transparent;
     margin-bottom: 5%;
     animation: transparent 5s cubic-bezier(0.19, 1, 0.22, 1) infinite;

@@ -1,5 +1,5 @@
 {
-    "name": "Codexe",
+    "name": "CodeXE",
     "scripts": {
         "dev": "nodemon",
         "build": "next build && tsc --project tsconfig.server.json",

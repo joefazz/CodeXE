@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import XTerminal from '../../components/Terminal';
@@ -6,7 +6,7 @@ import { colors, languageOptions } from '../../constants';
 import { Button } from '../../styled/Button';
 import LoadingCode from '../../components/LoadingCode';
 import { Split } from '../../styled/Split';
-import { ReactSetter } from '../../@types';
+import { Languages } from '../../@types';
 import { Selector } from '../../styled/Selector';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
@@ -15,27 +15,44 @@ const Monaco: any = dynamic(import('../../components/Monaco') as any, {
 
 type Props = {
     data: {
-        codeWidth: string | number;
-        codeHeight: string | number;
-        code: string;
-        language: string;
         containerId: string;
     };
-    setters: {
-        setCode: ReactSetter<string>;
-        setCodeWidth: ReactSetter<number>;
-        setCodeHeight: ReactSetter<number>;
-        setLang: ReactSetter<string>;
-    };
     functions: {
-        saveCode: () => void;
+        saveCode: (language: string, code: string) => void;
     };
 };
 
-function SandboxWidget({ data, setters, functions }: Props) {
-    const { code, codeWidth, codeHeight, language, containerId } = data;
-    const { setCode, setCodeHeight, setCodeWidth, setLang } = setters;
+function SandboxWidget({ data, functions }: Props) {
+    const { containerId } = data;
+
+    const [codeWidth, setCodeWidth] = useState<string | number>('100%');
+    const [codeHeight, setCodeHeight] = useState<string | number>('100%');
+    const [code, setCode] = useState('// Enter code');
+    const [language, setLang] = useState(Languages.JS as string);
     const { saveCode } = functions;
+
+    function switchLanguage(newLang: string) {
+        switch (newLang) {
+            case Languages.JS:
+                setCode('// Write JavaScript');
+                break;
+            case Languages.PYTHON:
+                setCode(`# Write Python`);
+                break;
+            case Languages.C:
+                setCode(
+                    `// Write CLang
+#include<stdio.h>
+
+int main(void) {
+    printf("Hello world");
+}`
+                );
+                break;
+        }
+
+        setLang(newLang);
+    }
 
     return (
         <Split split={'vertical'} defaultSize="50%" onChange={(size) => setCodeWidth(size)}>
@@ -66,13 +83,13 @@ function SandboxWidget({ data, setters, functions }: Props) {
                                 minHeight: '100%',
                                 borderRadius: 0
                             }}
-                            onClick={() => saveCode()}
+                            onClick={() => saveCode(language, code)}
                         >
                             Save
                         </Button>
                     </ControlArea>
                     <ControlArea>
-                        <Selector value={language} onChange={(e) => setLang(e.target.value)}>
+                        <Selector value={language} onChange={(e) => switchLanguage(e.target.value)}>
                             {languageOptions.map((opt) => (
                                 <option key={opt.value} value={opt.value}>
                                     {opt.label}
@@ -82,7 +99,7 @@ function SandboxWidget({ data, setters, functions }: Props) {
                     </ControlArea>
                 </Controls>
             </Split>
-            <XTerminal containerId={containerId} bidirectional={true} />
+            {containerId && <XTerminal containerId={containerId} bidirectional={true} />}
         </Split>
     );
 }

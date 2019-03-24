@@ -139,9 +139,12 @@ function HomeWidget({ data, setters, functions }: Props) {
             </ButtonArea>
             <Footer>
                 <p>
-                    Codexe is the final year project of{' '}
+                    CodeXE is the final year project of{' '}
                     <a href="https://twitter.com/purefazz">Joe Fazzino</a>, it's made to help people
                     learn how to code without installing anything!
+                </p>
+                <p>
+                    <code>Pronounced: Codex; or CodeXECUTE</code>
                 </p>
             </Footer>
         </Page>

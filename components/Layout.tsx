@@ -94,7 +94,7 @@ function Layout(props: Props) {
             <Header>
                 <LeftWrapper>
                     <Link href="/">
-                        <Logo>Codexe</Logo>
+                        <Logo>CodeXE</Logo>
                     </Link>
                     <Popup
                         trigger={() => (

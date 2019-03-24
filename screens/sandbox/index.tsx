@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import Layout from '../../components/Layout';
 import { SocketContext } from '../../pages/_app';
 import { Context, MessageTypes, Languages } from '../../@types';
@@ -7,12 +7,7 @@ import SandboxWidget from './SandboxWidget';
 function SandboxPage() {
     const { socket, id } = useContext(SocketContext) as Context;
 
-    const [codeWidth, setCodeWidth] = useState<string | number>('100%');
-    const [codeHeight, setCodeHeight] = useState<string | number>('100%');
-    const [code, setCode] = useState('// Enter code');
-    const [language, setLang] = useState(Languages.JS as string);
-
-    function saveCode() {
+    function saveCode(language: string, code: string) {
         const filename =
             language === Languages.JS
                 ? 'index.js'
@@ -34,11 +29,7 @@ function SandboxPage() {
 
     return (
         <Layout isLoggedIn={false}>
-            <SandboxWidget
-                data={{ codeWidth, codeHeight, containerId: id, language, code }}
-                setters={{ setCode, setCodeWidth, setCodeHeight, setLang }}
-                functions={{ saveCode }}
-            />
+            <SandboxWidget data={{ containerId: id }} functions={{ saveCode }} />
         </Layout>
     );
 }

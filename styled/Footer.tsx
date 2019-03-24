@@ -4,8 +4,8 @@ import { colors, fonts } from '../constants';
 export const Footer = styled.div`
     grid-area: footer;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: flex-start;
     background: ${colors.backgroundDarkTranslucent};
 
