@@ -1,145 +1,201 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { QueryStringMapObject } from 'next';
-import fetch from 'isomorphic-unfetch';
-import { SocketContext } from '../../pages/_app';
-import { Context, MessageTypes, Languages, Response } from '../../@types';
-import Layout from '../../components/Layout';
-import ExerciseWidget from './ExerciseWidget';
+import React from 'react';
+import dynamic from 'next/dynamic';
+import { Split } from '../../styled/Split';
+import LoadingCode from '../../components/LoadingCode';
+import XTerminal from '../../components/Terminal';
+import styled from 'styled-components';
+import { colors, fonts } from '../../constants';
+import { Button } from '../../styled/Button';
+import { Response, ReactSetter, Data, ContextResponse } from '../../@types';
+import LoadingTerm from '../../styled/LoadingTerm';
+const Monaco: any = dynamic(import('../../components/Monaco') as any, {
+    ssr: false,
+    loading: LoadingCode
+});
 
 type Props = {
-    exercise: Response.Exercise;
+    data: {
+        code: string;
+        progress: number;
+        stream: string | WebSocket;
+        currentActivity: Data.Activity;
+        response: ContextResponse;
+        exercise: Response.Exercise;
+        containerId: string;
+    };
+    setters: { setCodeWidth: ReactSetter<number>; setCode: ReactSetter<string> };
+    presentation: { codeWidth: string | number };
+    functions: { nextExercise: () => void; saveCode: () => void };
 };
 
-function Exercise({ exercise }: Props) {
-    const { socket, response, id, activityId } = useContext(SocketContext) as Context;
-
-    const [codeWidth, setCodeWidth] = useState<string | number>('100%');
-    const [progress, setProgress] = useState(0);
-    const [currentActivity, setCurrentActivity] = useState(exercise.activities[0]);
-    const [code, setCode] = useState(currentActivity.prebakedCode || '# Python code');
-    const [stream, setStream] = useState<WebSocket | string>('');
-
-    useEffect(() => {
-        console.log(socket, activityId);
-        if (socket && activityId === '') {
-            socket.send(JSON.stringify({ type: MessageTypes.CONTAINER_STOP, data: { id } }));
-
-            socket.send(
-                JSON.stringify({
-                    type: MessageTypes.EXERCISE_START,
-                    data: { image: exercise.container }
-                })
-            );
-        }
-
-        return function cleanup() {
-            if (activityId) {
-                console.log('DETATCHING FROM EXERCISE');
-                socket.send(
-                    JSON.stringify({
-                        type: MessageTypes.EXERCISE_STOP,
-                        data: { id: activityId, containerId: id }
-                    })
-                );
-            }
-        };
-    }, [socket, activityId]);
-
-    useEffect(() => {
-        if (response.metaData.saveInfo.succeed) {
-            console.log(response);
-            const repl =
-                exercise.language === Languages.JS
-                    ? 'node'
-                    : exercise.language === Languages.C
-                    ? 'gcc'
-                    : exercise.language;
-
-            console.log(activityId, repl, exercise.entrypoint)
-            let stream = new WebSocket(
-                `ws://localhost:4000/exercise?id=${activityId}&repl="${repl}"&filename="${
-                    exercise.entrypoint
-                }"`
-            );
-
-            setStream(stream);
-        }
-    }, [response.metaData.saveInfo.timestamp]);
-
-    function nextExercise() {
-        setProgress((prev) => prev + 1);
-        const activity = exercise.activities[progress];
-        setCurrentActivity(exercise.activities[progress]);
-        if (activity.prebakedCode) {
-            setCode(activity.prebakedCode);
-        }
-    }
-
-    function saveCode() {
-        socket.send(
-            JSON.stringify({
-                type: MessageTypes.CODE_SAVE,
-                data: {
-                    id: activityId,
-                    filename: exercise.entrypoint,
-                    code
-                }
-            })
-        );
-    }
+function ExerciseWidget({ data, setters, presentation, functions }: Props) {
+    const { exercise, currentActivity, code, stream, response, containerId, progress } = data;
+    const { setCodeWidth, setCode } = setters;
+    const { codeWidth } = presentation;
+    const { nextExercise, saveCode } = functions;
 
     return (
-        <Layout isLoggedIn={false}>
-            <ExerciseWidget
-                data={{
-                    exercise,
-                    progress,
-                    currentActivity,
-                    code,
-                    stream,
-                    response,
-                    containerId: activityId
-                }}
-                presentation={{ codeWidth }}
-                setters={{ setCode, setCodeWidth }}
-                functions={{ saveCode, nextExercise }}
-            />
-        </Layout>
+        <Split
+            split={'vertical'}
+            defaultSize={350}
+            onChange={(size) => setCodeWidth((prev: number) => prev + size)}
+            maxSize={350}
+            minSize={250}
+        >
+            <TutorialArea>
+                <TaskArea>
+                    <h1>{currentActivity.title}</h1>
+                    <span>{currentActivity.description}</span>
+                    <code>{currentActivity.task}</code>
+                    <Button
+                        primary
+                        style={{ flex: 1, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+                        onClick={() => nextExercise()}
+                    >
+                        Next
+                    </Button>
+                </TaskArea>
+            </TutorialArea>
+            <SecondPane>
+                <CodeArea>
+                    <Split
+                        split={'vertical'}
+                        onChange={(size) => setCodeWidth(size)}
+                        defaultSize={'75%'}
+                        maxSize={-250}
+                        minSize={500}
+                        style={{ height: '80%' }}
+                    >
+                        <Monaco
+                            language={exercise.language}
+                            width={codeWidth}
+                            height={'100%'}
+                            options={{
+                                fontSize: 18,
+                                minimap: { enabled: false },
+                                cursorStyle: 'block'
+                            }}
+                            value={code}
+                            onChange={(text: string) => setCode(text)}
+                        />
+                        {containerId ? (
+                            <XTerminal
+                                containerId={containerId}
+                                bidirectional={true}
+                                output={response.writeData || ''}
+                                customStream={stream}
+                            />
+                        ) : (
+                            <LoadingTerm>
+                                <span>Loading: {exercise.title} Machine...</span>
+                            </LoadingTerm>
+                        )}
+                    </Split>
+                </CodeArea>
+                <ActivityInfo>
+                    <h1>{exercise.title}</h1>
+
+                    <ButtonArea>
+                        <Button success onClick={() => saveCode()}>
+                            Run
+                        </Button>
+                    </ButtonArea>
+
+                    <Details>
+                        <code>
+                            {progress}/{exercise.length}
+                        </code>
+                        <code>Difficulty: {exercise.difficulty}</code>
+                    </Details>
+                </ActivityInfo>
+            </SecondPane>
+        </Split>
     );
 }
 
-Exercise.getInitialProps = async ({ query }: { query: QueryStringMapObject }) => {
-    const json = await fetch(`http://localhost:4000/exercise?id=${query.id}`)
-        .then((res) => res.json())
-        .catch((err) => console.log(err));
+const TutorialArea = styled.section`
+    padding: 10px;
+    height: calc(100% - 10px);
+    font-family: ${fonts.body};
+`;
 
-    console.log(json);
-    if (!json) {
-        // Fake Data
-        const fake: Response.Exercise = {
-            description: 'An introduction to the Python programming language',
-            difficulty: 'beginner',
-            entrypoint: 'main.py',
-            container: 'python_basics',
-            activities: [
-                {
-                    title: 'Strings 101',
-                    description:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut gravida facilisis sem id auctor. Integer dictum pellentesque nisi sed dignissim. Suspendisse dapibus vitae velit a laoreet. Cras egestas aliquam aliquam. Phasellus ut lacus fringilla erat vulputate varius. Praesent quis nulla ut ante lobortis sagittis. Nulla a ligula ligula. Pellentesque at libero nisl. Etiam id accumsan ipsum, sit amet fermentum ipsum. Phasellus vel tempus magna, quis auctor lectus. Sed nec nibh eget dolor porttitor congue vel a orci. Vivamus pulvinar dolor elit, ac vehicula nibh aliquet at. Aliquam scelerisque ante elit, a congue orci pulvinar sed. ',
-                    id: 0,
-                    task: 'Print Hello world',
-                    prebakedCode: '# This code is pre baked fam',
-                    expectedResult: 'Hello world'
-                }
-            ],
-            language: Languages.PYTHON,
-            title: 'Python 101',
-            length: 12
-        };
-        return { exercise: fake };
+const TaskArea = styled.div`
+    display: flex;
+    height: calc(100% - 10px);
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: floralwhite;
+    border-radius: 5px;
+    box-shadow: 2px 2px 3px black;
+
+    h1 {
+        margin-top: 15px;
+        margin-left: 5px;
+        flex: 1;
     }
 
-    return { exercise: json };
-};
+    span {
+        font-size: 1.1rem;
+        margin: 5px;
+        flex: 9;
+    }
 
-export default Exercise;
+    code {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        color: white;
+        font-size: 1.1rem;
+        padding: 10px;
+        margin: 5px;
+        background-color: #3c4556;
+        border-radius: 8px;
+        box-shadow: 2px 2px 1px black;
+    }
+`;
+
+const SecondPane = styled.div`
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+`;
+
+const CodeArea = styled.div`
+    flex: 9;
+`;
+
+const ActivityInfo = styled.div`
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: ${colors.backgroundDark};
+    padding: 0 10px;
+    color: white;
+
+    h1 {
+        flex: 2;
+        font-family: ${fonts.display};
+        font-size: 2rem;
+        font-weight: normal;
+    }
+`;
+
+const ButtonArea = styled.div`
+    flex: 0.5;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+`;
+
+const Details = styled.div`
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+`;
+
+export default ExerciseWidget;

@@ -5,8 +5,8 @@ export const Footer = styled.div`
     grid-area: footer;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     background: ${colors.backgroundDarkTranslucent};
 
     border-top-left-radius: 9px;
