@@ -89,7 +89,7 @@ function HomeWidget({ data, setters, functions }: Props) {
                 <FeatureArea>
                     <div
                         style={{
-                            marginTop: '9%',
+                            marginTop: '10%',
                             shapeOutside: 'circle(40%)',
                             height: '300px',
                             width: '35vh',
@@ -117,6 +117,10 @@ function HomeWidget({ data, setters, functions }: Props) {
                     <li>
                         <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
                         Learn the basics of some of the most popular languages
+                    </li>
+                    <li>
+                        <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
+                        Make your own exercise and share it
                     </li>
                     <li>
                         <EmojiListIcon src={'/static/images/earth-emoji.png'} alt="li" />
@@ -164,7 +168,7 @@ const Page = styled.div`
         '. . .'
         '. demo modules'
         '. demo modules'
-        '. demo buttons'
+        '. demo modules'
         '. footer footer';
     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
 `;
@@ -211,7 +215,7 @@ const FeatureArea = styled.ul`
 
 const ButtonArea = styled.div`
     grid-area: buttons;
-    display: flex;
+    display: none; // TODO: Implement login and reenable these
     flex-direction: row;
     justify-content: space-between;
 

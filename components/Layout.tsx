@@ -143,11 +143,11 @@ function Layout(props: Props) {
                     {/* <Link href="/profile">
                         <NavLink>Profile</NavLink>
                     </Link> */}
-                    {props.isLoggedIn ? (
+                    {/* {props.isLoggedIn ? (
                         <Avatar src="https://pbs.twimg.com/profile_images/1026402265190617089/zMyg2gvB_400x400.jpg" />
                     ) : (
                         <Button>Sign Up</Button>
-                    )}
+                    )} */}
                 </div>
             </Header>
             <div
