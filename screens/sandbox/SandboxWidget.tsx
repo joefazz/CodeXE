@@ -8,6 +8,7 @@ import LoadingCode from '../../components/LoadingCode';
 import { Split } from '../../styled/Split';
 import { Languages } from '../../@types';
 import { Selector } from '../../styled/Selector';
+import LoadingTerm from '../../styled/LoadingTerm';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
     loading: LoadingCode
@@ -99,7 +100,13 @@ int main(void) {
                     </ControlArea>
                 </Controls>
             </Split>
-            {containerId && <XTerminal containerId={containerId} bidirectional={true} />}
+            {containerId ? (
+                <XTerminal containerId={containerId} bidirectional={true} />
+            ) : (
+                <LoadingTerm>
+                    <span>Loading Container...</span>
+                </LoadingTerm>
+            )}
         </Split>
     );
 }

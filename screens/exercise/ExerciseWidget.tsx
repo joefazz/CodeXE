@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { colors, fonts } from '../../constants';
 import { Button } from '../../styled/Button';
 import { Response, ReactSetter, Data, ContextResponse } from '../../@types';
+import LoadingTerm from '../../styled/LoadingTerm';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
     loading: LoadingCode
@@ -195,18 +196,6 @@ const Details = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-`;
-
-const LoadingTerm = styled.div`
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: black;
-    color: white;
-    font-family: Consolas, monospace;
-    font-size: 24px;
 `;
 
 export default ExerciseWidget;
