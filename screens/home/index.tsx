@@ -147,11 +147,11 @@ function HomeWidget({ data, setters, functions }: Props) {
             <Footer>
                 <p>
                     CodeXE is the final year project of{' '}
-                    <a href="https://twitter.com/purefazz">Joe Fazzino</a>, it's made to help people
-                    learn how to code without installing anything!
+                    <a href="https://twitter.com/purefazz">Joe Fazzino</a>, it lowers the barrier to
+                    entry for development by giving everyone an online environment!
                 </p>
                 <p>
-                    <code>Pronounced: Codex; Code-Ex-Ee; or CodeXECUTE</code>
+                    <code>Pronounced: Codex; Code-Ex-Eee; or CodeXECUTE</code>
                 </p>
             </Footer>
         </Page>

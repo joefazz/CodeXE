@@ -109,6 +109,7 @@ function Exercise({ exercise }: Props) {
 }
 
 Exercise.getInitialProps = async ({ query }: { query: QueryStringMapObject }) => {
+    console.log(query);
     const json = await fetch(`http://localhost:4000/exercise?id=${query.id}`)
         .then((res) => res.json())
         .catch((err) => console.log(err));

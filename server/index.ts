@@ -21,6 +21,13 @@ app.prepare().then(() => {
         server.use(`/${fileName}`, express.static(getMonacoFilePath(fileName)));
     });
 
+    server.get('/exercise/:id', (req: any, res: Response) => {
+        const actualPage = '/exercise';
+        const queryParams = { id: req.params.id };
+
+        app.render(req, res, actualPage, queryParams);
+    });
+
     server.get('*', (req: any, res: any) => {
         return handle(req, res);
     });

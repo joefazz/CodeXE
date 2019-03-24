@@ -175,6 +175,7 @@ const ActivityInfo = styled.div`
     background-color: ${colors.backgroundDark};
     padding: 0 10px;
     color: white;
+    max-height: 75px;
 
     h1 {
         flex: 2;

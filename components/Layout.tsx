@@ -121,7 +121,7 @@ function Layout(props: Props) {
                             {containerName === ''
                                 ? 'There was a problem'
                                 : status === 'idle'
-                                ? `${containerName} has been paused while you do an exercise`
+                                ? `${containerName} has been paused`
                                 : `Connected to: ${containerName}`}
                         </span>
                     </Popup>

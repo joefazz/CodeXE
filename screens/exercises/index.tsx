@@ -72,7 +72,10 @@ function ExercisesWidget({ data, functions }: Props) {
     return (
         <Page>
             <List>
-                <Link href={`/exercise?id=${exercises[0]._id}`}>
+                <Link
+                    as={`/exercise/${exercises[0]._id}`}
+                    href={`/exercise?id=${exercises[0]._id}`}
+                >
                     <ExerciseCard>
                         <div>
                             <WindowButtonWrapper>
@@ -217,20 +220,31 @@ function ExercisesWidget({ data, functions }: Props) {
                             />
                         </CreateActivityFormWrapper>
                         <NumberWrapper>
-                            {activities.map((_, index) => (
-                                <ExerciseNumber
-                                    key={index}
-                                    active={index === currentActivityIndex}
-                                    onClick={() => setCurrActivityIndex(index)}
-                                >
-                                    {index + 1}
-                                </ExerciseNumber>
-                            ))}
-                            {activities.length !== 15 && (
-                                <ExerciseNumber active={false} onClick={() => addNewActivity()}>
-                                    +
-                                </ExerciseNumber>
-                            )}
+                            <div
+                                style={{
+                                    paddingLeft: '15%',
+                                    width: '100%',
+                                    height: 'auto',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap'
+                                }}
+                            >
+                                {activities.map((_, index) => (
+                                    <ExerciseNumber
+                                        key={index}
+                                        active={index === currentActivityIndex}
+                                        onClick={() => setCurrActivityIndex(index)}
+                                    >
+                                        {index + 1}
+                                    </ExerciseNumber>
+                                ))}
+                                {activities.length !== 15 && (
+                                    <ExerciseNumber active={false} onClick={() => addNewActivity()}>
+                                        +
+                                    </ExerciseNumber>
+                                )}
+                            </div>
                         </NumberWrapper>
                     </CreateActivity>
                 </form>
@@ -375,7 +389,6 @@ const CreateActivityFormWrapper = styled.div`
     flex: 3;
     flex-direction: column;
     align-items: stretch;
-    width: 75%;
     height: 100%;
 
     label {

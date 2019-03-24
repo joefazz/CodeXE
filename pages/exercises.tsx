@@ -30,7 +30,7 @@ function Exercises({ exercises }: Props) {
             body: JSON.stringify(args)
         })
             .then((res) => res.json())
-            .then((json) => Router.push(`/exercise?id=${json.id}`));
+            .then((json) => Router.push(`/exercise?id=${json.id}`, `/exercise/${json.id}`));
     }
 
     return (
