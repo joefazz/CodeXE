@@ -35,10 +35,12 @@ export enum MessageTypes {
     CONTAINER_STOP = 'Container.Stop',
     CONTAINER_PAUSE = 'Container.Pause',
     CONTAINER_RESUME = 'Container.Resume',
+    CONTAINER_TREE = 'Container.TreeRead',
     EXERCISE_START = 'Exercise.Start',
     EXERCISE_CONNECT = 'Exercise.Connect',
     EXERCISE_STOP = 'Exercise.Stop',
     EXERCISE_RUN = 'Exercise.Run',
     EXERCISE_EXEC = 'Exercise.Exec',
-    CODE_SAVE = 'Code.Save'
+    CODE_SAVE = 'Code.Save',
+    CODE_READ = 'Code.Read'
 }

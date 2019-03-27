@@ -41,7 +41,7 @@ export default class MyApp extends App {
 
         this.socket.onmessage = (event) => {
             const { type, data }: { type: MessageTypes; data: any } = JSON.parse(event.data);
-            console.log('Message Recieved!', 'Type: ' + type);
+            console.log('Message Recieved!', 'Type: ' + type, 'Data: ' + JSON.stringify(data));
 
             switch (type) {
                 case MessageTypes.CONTAINER_START:
@@ -96,6 +96,27 @@ export default class MyApp extends App {
                             metaData: {
                                 ...this.state.response.metaData,
                                 saveInfo: { timestamp: Date.now(), succeed: data.success }
+                            }
+                        }
+                    });
+                    break;
+                case MessageTypes.CODE_READ:
+                    console.log('Code read returned');
+                    this.setState({
+                        response: {
+                            ...this.state.response,
+                            readData: { ...this.state.response.readData, code: data.code }
+                        }
+                    });
+                    break;
+                case MessageTypes.CONTAINER_TREE:
+                    console.log('Container tree returned');
+                    this.setState({
+                        response: {
+                            ...this.state.response,
+                            metaData: {
+                                ...this.state.response.metaData,
+                                tree: data.result
                             }
                         }
                     });

@@ -5,6 +5,7 @@ export const colors = {
     mainGreen: '#3ca56e',
     backgroundDark: '#282c34',
     backgroundBlue: '#2d3e5d',
+    backgroundSuperDark: '#1d2129',
     backgroundDarkTranslucent: 'rgba(40,44,52, 0.7)'
 };
 

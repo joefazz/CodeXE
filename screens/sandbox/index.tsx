@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import XTerminal from '../../components/Terminal';
-import { colors, languageOptions } from '../../constants';
+import { colors } from '../../constants';
 import { Button } from '../../styled/Button';
 import LoadingCode from '../../components/LoadingCode';
-import { Split } from '../../styled/Split';
-import { Languages } from '../../@types';
-import { Selector } from '../../styled/Selector';
+import { Split, SplitChild } from '../../styled/Split';
+import { Languages, Context } from '../../@types';
 import LoadingTerm from '../../styled/LoadingTerm';
+import { SocketContext } from '../../pages/_app';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
     loading: LoadingCode
@@ -20,80 +20,93 @@ type Props = {
     };
     functions: {
         saveCode: (language: string, code: string) => void;
+        readCode: (file: string) => void;
     };
 };
 
 function SandboxWidget({ data, functions }: Props) {
     const { containerId } = data;
+    const { response } = useContext(SocketContext) as Context;
 
     const [codeWidth, setCodeWidth] = useState<string | number>('100%');
-    const [code, setCode] = useState('// Enter code');
+    const [code, setCode] = useState('// Pick a file from the left to start coding!');
     const [language, setLang] = useState(Languages.JS as string);
-    const { saveCode } = functions;
+    const { saveCode, readCode } = functions;
 
-    function switchLanguage(newLang: string) {
-        switch (newLang) {
-            case Languages.JS:
-                setCode('// Write JavaScript');
-                break;
-            case Languages.PYTHON:
-                setCode(`# Write Python`);
-                break;
-            case Languages.C:
-                setCode(
-                    `// Write CLang
-#include<stdio.h>
-
-int main(void) {
-    printf("Hello world");
-}`
-                );
-                break;
+    useEffect(() => {
+        if (response.readData.code) {
+            setCode(response.readData.code);
         }
+    }, [response.readData.code]);
 
-        setLang(newLang);
-    }
+    console.log(response.metaData);
 
     return (
-        <Split split={'vertical'} defaultSize="50%" onChange={(size) => setCodeWidth(size)}>
-            <LeftPanel>
-                <Monaco
-                    language={language}
-                    width={codeWidth}
-                    height={'100%'}
-                    options={{
-                        fontSize: 18,
-                        minimap: { enabled: false },
-                        cursorStyle: 'block'
-                    }}
-                    onChange={(newVal: string) => setCode(newVal)}
-                    value={code}
-                />
-                <Controls>
-                    <ControlArea>
-                        <Button
-                            primary
-                            success
-                            style={{
-                                minHeight: '100%',
-                                borderRadius: 0
-                            }}
-                            onClick={() => saveCode(language, code)}
-                        >
-                            Save
-                        </Button>
-                    </ControlArea>
-                    <ControlArea>
-                        <Selector value={language} onChange={(e) => switchLanguage(e.target.value)}>
-                            {languageOptions.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </option>
+        <Split split={'vertical'} defaultSize="65%" onChange={(size) => setCodeWidth(size)}>
+            <SplitChild
+                split={'vertical'}
+                defaultSize="15%"
+                onChange={(size) => setCodeWidth(Number(codeWidth) - size)}
+            >
+                <FileArea>
+                    <FileWrapper>
+                        {response.metaData.tree &&
+                            response.metaData.tree.map((file: string) => (
+                                <File
+                                    onClick={() => {
+                                        readCode(file);
+                                        let extension = file.split('.')[1];
+                                        setLang(
+                                            extension === 'js'
+                                                ? Languages.JS
+                                                : extension === 'py'
+                                                ? Languages.PYTHON
+                                                : Languages.C
+                                        );
+                                    }}
+                                >
+                                    {file}
+                                </File>
                             ))}
-                        </Selector>
-                    </ControlArea>
-                </Controls>
-            </LeftPanel>
+                    </FileWrapper>
+                    <Button
+                        primary
+                        success
+                        style={{
+                            borderRadius: 0,
+                            flex: 1
+                        }}
+                        onClick={() => saveCode(language, code)}
+                    >
+                        Save
+                    </Button>
+                </FileArea>
+                <div style={{ height: '100%' }}>
+                    <Monaco
+                        language={language}
+                        width={codeWidth}
+                        height={'100%'}
+                        options={{
+                            fontSize: 18,
+                            minimap: { enabled: false },
+                            cursorStyle: 'block'
+                        }}
+                        onChange={(newVal: string) => setCode(newVal)}
+                        value={code}
+                    />
+                    {/* <Selector
+                        style={{ height: '5%', width: '100%' }}
+                        value={language}
+                        onChange={(e) => switchLanguage(e.target.value)}
+                    >
+                        {languageOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                            </option>
+                        ))}
+                    </Selector> */}
+                </div>
+            </SplitChild>
             {containerId ? (
                 <XTerminal containerId={containerId} bidirectional={true} />
             ) : (
@@ -115,18 +128,39 @@ const Controls = styled.div`
     flex-direction: row;
 `;
 
-const ControlArea = styled.div`
+// const ControlArea = styled.div`
+//     display: flex;
+//     flex: 1;
+//     flex-direction: column;
+//     align-items: stretch;
+//     height: 100%;
+// `;
+
+const FileArea = styled.section`
     display: flex;
-    flex: 1;
     flex-direction: column;
-    align-items: stretch;
     height: 100%;
+    align-items: stretch;
+    justify-content: flex-start;
+    background-color: ${colors.backgroundSuperDark};
 `;
 
-const LeftPanel = styled.section`
-    display: grid;
-    grid-template-rows: 1fr auto;
-    height: 100%;
+const FileWrapper = styled.div`
+    display: flex;
+    flex: 20;
+    flex-direction: column;
+`;
+
+const File = styled.span`
+    color: white;
+    padding: 3px 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    cursor: pointer;
+
+    :hover {
+        background-color: ${colors.backgroundBlue};
+    }
 `;
 
 export default SandboxWidget;
