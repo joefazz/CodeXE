@@ -19,7 +19,7 @@ type Props = {
         containerId: string;
     };
     functions: {
-        saveCode: (language: string, code: string) => void;
+        saveCode: (code: string) => void;
         readCode: (file: string) => void;
     };
 };
@@ -39,20 +39,21 @@ function SandboxWidget({ data, functions }: Props) {
         }
     }, [response.readData.code]);
 
-    console.log(response.metaData);
-
     return (
-        <Split split={'vertical'} defaultSize="65%" onChange={(size) => setCodeWidth(size)}>
+        <Split split={'vertical'} defaultSize="65%">
             <SplitChild
                 split={'vertical'}
-                defaultSize="15%"
-                onChange={(size) => setCodeWidth(Number(codeWidth) - size)}
+                defaultSize="85%"
+                maxSize="30%"
+                primary={'second'}
+                onChange={(size) => setCodeWidth(size)}
             >
                 <FileArea>
                     <FileWrapper>
                         {response.metaData.tree &&
                             response.metaData.tree.map((file: string) => (
                                 <File
+                                    key={file}
                                     onClick={() => {
                                         readCode(file);
                                         let extension = file.split('.')[1];
@@ -76,7 +77,7 @@ function SandboxWidget({ data, functions }: Props) {
                             borderRadius: 0,
                             flex: 1
                         }}
-                        onClick={() => saveCode(language, code)}
+                        onClick={() => saveCode(code)}
                     >
                         Save
                     </Button>
