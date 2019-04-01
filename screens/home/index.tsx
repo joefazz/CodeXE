@@ -52,20 +52,22 @@ function HomeWidget({ data, setters, functions }: Props) {
                         C
                     </li>
                 </LanguageWrapper>
-                <Monaco
-                    data-testid="monaco"
-                    height="100%"
-                    width="100%"
-                    options={{
-                        minimap: { enabled: false },
-                        fontSize: 18,
-                        lineNumbers: 'off',
-                        cursorStyle: 'block'
-                    }}
-                    language={language}
-                    onChange={(newVal: string) => setCode(newVal)}
-                    value={code}
-                />
+                <div style={{ height: '53.2%' }}>
+                    <Monaco
+                        data-testid="monaco"
+                        height="100%"
+                        width="100%"
+                        options={{
+                            minimap: { enabled: false },
+                            fontSize: 18,
+                            lineNumbers: 'off',
+                            cursorStyle: 'block'
+                        }}
+                        language={language}
+                        onChange={(newVal: string) => setCode(newVal)}
+                        value={code}
+                    />
+                </div>
                 <div>
                     <Button
                         success

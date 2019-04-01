@@ -6,7 +6,12 @@ class Monaco extends Component<MonacoEditorBaseProps> {
 
     render() {
         return this.MonacoEditor ? (
-            <this.MonacoEditor theme="vs-dark" editorDidMount={() => null} {...this.props} />
+            <this.MonacoEditor
+                data-testid="monaco"
+                theme="vs-dark"
+                editorDidMount={() => null}
+                {...this.props}
+            />
         ) : null;
     }
 }
