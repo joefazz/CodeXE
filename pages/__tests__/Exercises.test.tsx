@@ -6,8 +6,9 @@ import { render } from 'react-testing-library';
 import { SocketContext } from '../_app';
 import { CONTEXT_DEFAULT } from '../../constants';
 import Exercises from '../exercises';
+import Exercise from '../exercise';
 
-const EXERCISE_MOCK = {
+const EXERCISE_MOCK: Exercise = {
     _id: '0',
     title: 'Python Strings 101',
     description: 'Learn the basics of strings in Python!',
