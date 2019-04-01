@@ -9,6 +9,19 @@ export const colors = {
     backgroundDarkTranslucent: 'rgba(40,44,52, 0.7)'
 };
 
+export const CONTEXT_DEFAULT = {
+    status: 'disconnected',
+    containerName: '',
+    id: '',
+    activityId: '',
+    response: {
+        readData: {},
+        metaData: { saveInfo: {} },
+        writeData: { output: 'Output' }
+    },
+    socket: ''
+};
+
 export const fonts = {
     display: "'Arvo', serif",
     body: "'Josefin Sans', sans-serif"

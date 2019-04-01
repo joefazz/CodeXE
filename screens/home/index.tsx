@@ -53,6 +53,7 @@ function HomeWidget({ data, setters, functions }: Props) {
                     </li>
                 </LanguageWrapper>
                 <Monaco
+                    data-testid="monaco"
                     height="100%"
                     width="100%"
                     options={{

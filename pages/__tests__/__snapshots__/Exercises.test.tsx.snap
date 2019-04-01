@@ -1,0 +1,317 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="Layout__RootPage-sc-19ikuwz-0 jmOFgE"
+  >
+    <header
+      class="Header-sc-2vudz7-0 iCnnCf"
+    >
+      <div
+        class="Layout__LeftWrapper-sc-19ikuwz-1 jJmoFf"
+      >
+        <a
+          class="Logo-sc-108q7dg-0 hhrpgI"
+        >
+          CodeXE
+        </a>
+        <div
+          class="Layout__StatusWrapper-sc-19ikuwz-2 kHDkvk"
+        >
+          <span
+            style="padding-top: 2px;"
+          >
+            Connection Status:
+          </span>
+           
+          <div
+            class="Layout__ContainerStatus-sc-19ikuwz-3 idJFII"
+            color="red"
+          />
+        </div>
+      </div>
+      <div
+        style="display: flex; justify-content: space-evenly; align-items: center; width: 40%;"
+      >
+        <a
+          class="NavLink-sc-1yp13yj-0 fHJUjJ"
+        >
+          Sandbox
+        </a>
+        <a
+          class="NavLink-sc-1yp13yj-0 fHJUjJ"
+        >
+          Exercises
+        </a>
+      </div>
+    </header>
+    <div
+      style="background-color: rgb(45, 62, 93); padding-top: 75px; width: 100vw;"
+    >
+      <div
+        class="exercises__Page-sc-71g1vq-0 ivuIJT"
+      >
+        <section
+          class="exercises__List-sc-71g1vq-1 fMgiSC"
+        >
+          <div
+            class="exercises__ExerciseCard-sc-71g1vq-7 cWcEnd"
+          >
+            <div>
+              <section
+                class="exercises__WindowButtonWrapper-sc-71g1vq-8 kFqMgY"
+              >
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 irkQpI"
+                  color="#fc5753"
+                />
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 icLVjQ"
+                  color="#fdbc40"
+                />
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 bftZuI"
+                  color="#34c748"
+                />
+              </section>
+              <span>
+                Python Strings
+              </span>
+            </div>
+            <code
+              class="exercises__ExerciseDescription-sc-71g1vq-10 fAslEs"
+            >
+              <ul
+                style="list-style: none;"
+              >
+                <li>
+                  &gt; Python?!
+                </li>
+                <li>
+                  &gt; Is there a snake?
+                </li>
+                <li>
+                  &gt; I hate snakes!
+                </li>
+              </ul>
+            </code>
+          </div>
+          <div
+            class="exercises__ExerciseCard-sc-71g1vq-7 cWcEnd"
+          >
+            <div>
+              <section
+                class="exercises__WindowButtonWrapper-sc-71g1vq-8 kFqMgY"
+              >
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 irkQpI"
+                  color="#fc5753"
+                />
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 icLVjQ"
+                  color="#fdbc40"
+                />
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 bftZuI"
+                  color="#34c748"
+                />
+              </section>
+              <span>
+                C++ Pointers
+              </span>
+            </div>
+            <code
+              class="exercises__ExerciseDescription-sc-71g1vq-10 fAslEs"
+            >
+              <ul
+                style="list-style: none;"
+              >
+                <li>
+                  &gt; What is a Pointer?
+                </li>
+                <li>
+                  &gt; Sorry what?
+                </li>
+                <li>
+                  &gt; Still don't get it
+                </li>
+              </ul>
+            </code>
+          </div>
+          <div
+            class="exercises__ExerciseCard-sc-71g1vq-7 cWcEnd"
+          >
+            <div>
+              <section
+                class="exercises__WindowButtonWrapper-sc-71g1vq-8 kFqMgY"
+              >
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 irkQpI"
+                  color="#fc5753"
+                />
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 icLVjQ"
+                  color="#fdbc40"
+                />
+                <i
+                  class="exercises__WindowButton-sc-71g1vq-9 bftZuI"
+                  color="#34c748"
+                />
+              </section>
+              <span>
+                NodeJS in Anger
+              </span>
+            </div>
+            <code
+              class="exercises__ExerciseDescription-sc-71g1vq-10 fAslEs"
+            >
+              <ul
+                style="list-style: none;"
+              >
+                <li>
+                  &gt; What is Node?
+                </li>
+                <li>
+                  &gt; Building a Server
+                </li>
+                <li>
+                  &gt; Advanced Concepts
+                </li>
+              </ul>
+            </code>
+          </div>
+        </section>
+        <section
+          class="exercises__CreateArea-sc-71g1vq-2 iNNjwu"
+        >
+          <h1>
+            Create your own exercise!
+          </h1>
+          <form>
+            <label
+              for="name"
+              id="namelabel"
+            >
+              Exercise Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              placeholder="Enter the title of your exercise here"
+              type="text"
+              value=""
+            />
+            <label
+              for="select"
+              id="selectlabel"
+            >
+              Select Language
+            </label>
+            <select
+              class="Selector-sc-1nm0eq5-0 ipmcOS"
+              id="langselect"
+            >
+              <option
+                value="javascript"
+              >
+                JavaScript
+              </option>
+              <option
+                value="python"
+              >
+                Python
+              </option>
+              <option
+                value="cpp"
+              >
+                C/C++
+              </option>
+            </select>
+            <button
+              class="Button-sc-1w81v9u-0 kpoddQ"
+              type="submit"
+            >
+              Create Exercise
+            </button>
+            <label
+              for="activities"
+              id="activitylabel"
+            >
+              Activities:
+            </label>
+            <div
+              class="exercises__CreateActivity-sc-71g1vq-3 fBZhSn"
+              id="activities"
+            >
+              <div
+                class="exercises__CreateActivityFormWrapper-sc-71g1vq-4 dCPebn"
+              >
+                <label
+                  for="activityname"
+                >
+                  Activity Name
+                </label>
+                <input
+                  id="activityname"
+                  name="activityname"
+                  type="text"
+                  value="Example"
+                />
+                <label
+                  for="activitydescription"
+                >
+                  Activity Description
+                </label>
+                <textarea
+                  id="activitydescription"
+                  name="activitydescription"
+                >
+                  Describe your activity here and press the plus to add more :)
+                </textarea>
+                <label
+                  for="activitytask"
+                >
+                  Task
+                </label>
+                <input
+                  id="activitytask"
+                  name="activitytask"
+                  type="text"
+                  value="Print: Hello world!"
+                />
+                <label
+                  for="prebaked"
+                >
+                  Placeholder code
+                </label>
+                <p>
+                  loading...
+                </p>
+              </div>
+              <div
+                class="exercises__NumberWrapper-sc-71g1vq-5 bOwtrs"
+              >
+                <div
+                  style="padding-left: 15%; width: 100%; height: auto; display: flex; flex-direction: row; flex-wrap: wrap;"
+                >
+                  <div
+                    class="exercises__ExerciseNumber-sc-71g1vq-6 iWmlCk"
+                  >
+                    1
+                  </div>
+                  <div
+                    class="exercises__ExerciseNumber-sc-71g1vq-6 kDuaqT"
+                  >
+                    +
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

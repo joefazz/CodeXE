@@ -1,0 +1,210 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home Page Snapshot Should match Snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="Layout__RootPage-sc-19ikuwz-0 jmOFgE"
+  >
+    <header
+      class="Header-sc-2vudz7-0 iCnnCf"
+    >
+      <div
+        class="Layout__LeftWrapper-sc-19ikuwz-1 jJmoFf"
+      >
+        <a
+          class="Logo-sc-108q7dg-0 hhrpgI"
+        >
+          CodeXE
+        </a>
+        <div
+          class="Layout__StatusWrapper-sc-19ikuwz-2 kHDkvk"
+        >
+          <span
+            style="padding-top: 2px;"
+          >
+            Connection Status:
+          </span>
+           
+          <div
+            class="Layout__ContainerStatus-sc-19ikuwz-3 idJFII"
+            color="red"
+          />
+        </div>
+      </div>
+      <div
+        style="display: flex; justify-content: space-evenly; align-items: center; width: 40%;"
+      >
+        <a
+          class="NavLink-sc-1yp13yj-0 fHJUjJ"
+        >
+          Sandbox
+        </a>
+        <a
+          class="NavLink-sc-1yp13yj-0 fHJUjJ"
+        >
+          Exercises
+        </a>
+      </div>
+    </header>
+    <div
+      style="background-color: rgb(45, 62, 93); padding-top: 75px; width: 100vw;"
+    >
+      <div
+        class="home__Page-ahlzao-0 jCJZlP"
+      >
+        <div
+          class="home__CodeSection-ahlzao-2 kusRdq"
+        >
+          <h1
+            class="home__H1-ahlzao-7 guLOiD"
+          >
+            Do coding exercises right in your browser!
+          </h1>
+          <ul
+            class="home__LanguageWrapper-ahlzao-6 fQDkWg"
+          >
+            <li
+              style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;"
+            >
+              JavaScript
+            </li>
+            <li>
+              Python
+            </li>
+            <li
+              style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;"
+            >
+              C
+            </li>
+          </ul>
+          <div
+            class="LoadingCode__CodeLoad-sc-1cr3tz2-0 hVMQDt"
+          >
+            <img
+              class="LoadingCode__VSLoader-sc-1cr3tz2-1 jFvteS"
+              src="static/images/vscode-b&w.png"
+            />
+            <h1
+              class="H1-sc-1otcw4s-0 krdItu"
+            >
+              Loading Code...
+            </h1>
+          </div>
+          <div>
+            <button
+              class="Button-sc-1w81v9u-0 gqAGCh"
+              style="font-size: 1.8rem; border-top-left-radius: 0; border-top-right-radius: 0;"
+            >
+              Run
+            </button>
+          </div>
+          <span
+            class="CodeOutput-fl4bg6-0 fnbzUW"
+          >
+            Disconnected
+          </span>
+        </div>
+        <div
+          class="home__InfoSection-ahlzao-3 cmUEBH"
+        >
+          <img
+            alt="logo"
+            class="App-logo"
+            src="/static/svgs/Moon.svg"
+          />
+          <ul
+            class="home__FeatureArea-ahlzao-4 eHVlfh"
+          >
+            <div
+              style="margin-top: 10%; shape-outside: circle(40%); height: 300px; width: 35vh; max-height: 300px; max-width: 300px; float: left; text-align: right;"
+            />
+            <br />
+            <li>
+              <img
+                alt="li"
+                class="home__EmojiListIcon-ahlzao-1 igxaRr"
+                src="/static/images/earth-emoji.png"
+              />
+              Automagically generated exercises
+            </li>
+            <li>
+              <img
+                alt="li"
+                class="home__EmojiListIcon-ahlzao-1 igxaRr"
+                src="/static/images/earth-emoji.png"
+              />
+              Fully featured code editor
+            </li>
+            <li>
+              <img
+                alt="li"
+                class="home__EmojiListIcon-ahlzao-1 igxaRr"
+                src="/static/images/earth-emoji.png"
+              />
+              Interact with a full Linux Virtual Machine
+            </li>
+            <li>
+              <img
+                alt="li"
+                class="home__EmojiListIcon-ahlzao-1 igxaRr"
+                src="/static/images/earth-emoji.png"
+              />
+              Learn the basics of some of the most popular languages
+            </li>
+            <li>
+              <img
+                alt="li"
+                class="home__EmojiListIcon-ahlzao-1 igxaRr"
+                src="/static/images/earth-emoji.png"
+              />
+              Make your own exercise and share it
+            </li>
+            <li>
+              <img
+                alt="li"
+                class="home__EmojiListIcon-ahlzao-1 igxaRr"
+                src="/static/images/earth-emoji.png"
+              />
+              No set up required
+            </li>
+          </ul>
+        </div>
+        <div
+          class="home__ButtonArea-ahlzao-5 fKdXFG"
+        >
+          <button
+            class="Button-sc-1w81v9u-0 ILFva"
+            style="box-shadow: 0 0 20px black;"
+          >
+            Log In
+          </button>
+          <button
+            class="Button-sc-1w81v9u-0 ebJCPF"
+            style="border-top-right-radius: 0; border-bottom-right-radius: 0; box-shadow: 0 0 20px black;"
+          >
+            Sign Up
+          </button>
+        </div>
+        <div
+          class="Footer-sc-19yne8k-0 jyFxbK"
+        >
+          <p>
+            CodeXE is the final year project of 
+            <a
+              href="https://twitter.com/purefazz"
+            >
+              Joe Fazzino
+            </a>
+            , it lowers the barrier to entry for development by giving everyone an online environment!
+          </p>
+          <p>
+            <code>
+              Pronounced: Codex; Code-Ex-Eee; or CodeXECUTE
+            </code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
