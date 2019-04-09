@@ -46,7 +46,7 @@ function Exercise({ exercise }: Props) {
     }, [socket, activityId]);
 
     useEffect(() => {
-        if (response.metaData.saveInfo.succeed) {
+        if (response.metaData.saveInfo.succeed && activityId !== '') {
             console.log(response);
             const repl =
                 exercise.language === Languages.JS
@@ -64,12 +64,13 @@ function Exercise({ exercise }: Props) {
 
             setStream(stream);
         }
-    }, [response.metaData.saveInfo.timestamp]);
+    }, [response.metaData.saveInfo.timestamp, activityId]);
 
     function nextExercise() {
         setProgress((prev) => prev + 1);
+        console.log(progress);
         const activity = exercise.activities[progress];
-        setCurrentActivity(exercise.activities[progress]);
+        setCurrentActivity(activity);
         if (activity.prebakedCode) {
             setCode(activity.prebakedCode);
         }
@@ -109,12 +110,10 @@ function Exercise({ exercise }: Props) {
 }
 
 Exercise.getInitialProps = async ({ query }: { query: QueryStringMapObject }) => {
-    console.log(query);
     const json = await fetch(`http://localhost:4000/exercise?id=${query.id}`)
         .then((res) => res.json())
         .catch((err) => console.log(err));
 
-    console.log(json);
     if (!json) {
         // Fake Data
         const fake: Response.Exercise = {
