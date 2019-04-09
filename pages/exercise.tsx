@@ -66,9 +66,10 @@ function Exercise({ exercise }: Props) {
         }
     }, [response.metaData.saveInfo.timestamp, activityId]);
 
+    // TODO: Test this
     function nextExercise() {
         setProgress((prev) => prev + 1);
-        console.log(progress);
+        // console.log(progress);
         const activity = exercise.activities[progress];
         setCurrentActivity(activity);
         if (activity.prebakedCode) {
