@@ -2,6 +2,7 @@ import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
 import { MessageTypes } from '../@types';
+import { handleMessage } from '../functions/websockets';
 
 export const SocketContext = React.createContext({});
 
@@ -36,95 +37,9 @@ export default class MyApp extends App {
 
         this.socket.onopen = () => {
             console.log('Socket Opened');
-            // socket.send(JSON.stringify({ type: 'container.start' }));
         };
 
-        this.socket.onmessage = (event) => {
-            const { type, data }: { type: MessageTypes; data: any } = JSON.parse(event.data);
-            console.log('Message Recieved!', 'Type: ' + type, 'Data: ' + JSON.stringify(data));
-
-            switch (type) {
-                case MessageTypes.CONTAINER_START:
-                    console.log('Container Started');
-                    if (this.state.containerName === '' && this.state.id === '') {
-                        const { name, info } = data;
-                        this.setState({
-                            containerName: name,
-                            status: 'connected',
-                            id: info.Config.Hostname
-                        });
-                    } else {
-                        this.setState({ status: 'connected' });
-                    }
-                    break;
-                case MessageTypes.CONTAINER_PAUSE:
-                    this.setState({ status: 'idle' });
-                    break;
-                case MessageTypes.CONTAINER_RESUME:
-                    this.setState({ status: 'connected' });
-                    break;
-                case MessageTypes.CONTAINER_EXEC:
-                    console.log('Execution returned');
-                    this.setState({
-                        response: { ...this.state.response, writeData: { output: data } }
-                    });
-                    break;
-                case MessageTypes.CONTAINER_READ:
-                    console.log('Code read');
-                    this.setState({
-                        response: { ...this.state.response, readData: data }
-                    });
-                    break;
-                case MessageTypes.CONTAINER_STOP:
-                    console.log('stopped container');
-                    break;
-                case MessageTypes.EXERCISE_CONNECT:
-                    this.setState({
-                        activityId: data
-                    });
-                    break;
-                case MessageTypes.EXERCISE_STOP:
-                    this.setState({
-                        activityId: ''
-                    });
-                    break;
-                case MessageTypes.CODE_SAVE:
-                    console.log('Code save returned');
-                    this.setState({
-                        response: {
-                            ...this.state.response,
-                            metaData: {
-                                ...this.state.response.metaData,
-                                saveInfo: { timestamp: Date.now(), succeed: data.success }
-                            }
-                        }
-                    });
-                    break;
-                case MessageTypes.CODE_READ:
-                    console.log('Code read returned');
-                    this.setState({
-                        response: {
-                            ...this.state.response,
-                            readData: { ...this.state.response.readData, code: data.code }
-                        }
-                    });
-                    break;
-                case MessageTypes.CONTAINER_TREE:
-                    console.log('Container tree returned');
-                    this.setState({
-                        response: {
-                            ...this.state.response,
-                            metaData: {
-                                ...this.state.response.metaData,
-                                tree: data.result
-                            }
-                        }
-                    });
-                    break;
-                default:
-                    console.log('other type', data);
-            }
-        };
+        this.socket.onmessage = (event) => this.setState(handleMessage(event, this.state));
 
         this.socket.onclose = function() {
             // socket.send('container.end');
@@ -150,7 +65,7 @@ export default class MyApp extends App {
                 <Head>
                     <title>CodeXE</title>
                     <link
-                        href="https://fonts.googleapis.com/css?family=Josefin+Sans|Arvo"
+                        href="https://fonts.googleapis.com/css?family=Cantarell|Arvo"
                         rel="stylesheet"
                     />
                     <link

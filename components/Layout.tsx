@@ -99,7 +99,7 @@ function Layout(props: Props) {
                     <Popup
                         trigger={() => (
                             <StatusWrapper>
-                                <span style={{ paddingTop: '2px' }}>Connection Status:</span>{' '}
+                                <span style={{ paddingBottom: '2px' }}>Connection Status:</span>{' '}
                                 <ContainerStatus
                                     color={
                                         status === 'disconnected'

@@ -210,7 +210,7 @@ const FeatureArea = styled.ul`
     li {
         list-style: none;
         color: white;
-        font-family: ${fonts.body};
+        font-family: ${fonts.display};
         margin-top: 2.2%;
         font-size: 1.4rem;
     }

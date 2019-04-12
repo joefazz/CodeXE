@@ -17,10 +17,10 @@ exports[`Home Page Snapshot Should match Snapshot 1`] = `
           CodeXE
         </a>
         <div
-          class="Layout__StatusWrapper-sc-19ikuwz-2 kHDkvk"
+          class="Layout__StatusWrapper-sc-19ikuwz-2 bjSJPB"
         >
           <span
-            style="padding-top: 2px;"
+            style="padding-bottom: 2px;"
           >
             Connection Status:
           </span>
@@ -78,17 +78,21 @@ exports[`Home Page Snapshot Should match Snapshot 1`] = `
             </li>
           </ul>
           <div
-            class="LoadingCode__CodeLoad-sc-1cr3tz2-0 hVMQDt"
+            style="height: 53.2%;"
           >
-            <img
-              class="LoadingCode__VSLoader-sc-1cr3tz2-1 jFvteS"
-              src="static/images/vscode-b&w.png"
-            />
-            <h1
-              class="H1-sc-1otcw4s-0 krdItu"
+            <div
+              class="LoadingCode__CodeLoad-sc-1cr3tz2-0 dPxXKw"
             >
-              Loading Code...
-            </h1>
+              <img
+                class="LoadingCode__VSLoader-sc-1cr3tz2-1 jFvteS"
+                src="static/images/vscode-b&w.png"
+              />
+              <h1
+                class="H1-sc-1otcw4s-0 krdItu"
+              >
+                Loading Code...
+              </h1>
+            </div>
           </div>
           <div>
             <button
@@ -113,7 +117,7 @@ exports[`Home Page Snapshot Should match Snapshot 1`] = `
             src="/static/svgs/Moon.svg"
           />
           <ul
-            class="home__FeatureArea-ahlzao-4 eHVlfh"
+            class="home__FeatureArea-ahlzao-4 kSuieO"
           >
             <div
               style="margin-top: 10%; shape-outside: circle(40%); height: 300px; width: 35vh; max-height: 300px; max-width: 300px; float: left; text-align: right;"
@@ -186,7 +190,7 @@ exports[`Home Page Snapshot Should match Snapshot 1`] = `
           </button>
         </div>
         <div
-          class="Footer-sc-19yne8k-0 jyFxbK"
+          class="Footer-sc-19yne8k-0 jBOzTc"
         >
           <p>
             CodeXE is the final year project of 

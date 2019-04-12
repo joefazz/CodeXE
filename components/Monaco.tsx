@@ -1,5 +1,5 @@
 import { MonacoEditorProps, MonacoEditorBaseProps } from 'react-monaco-editor';
-import { Component } from 'react';
+import { Component, ErrorInfo } from 'react';
 
 class Monaco extends Component<MonacoEditorBaseProps> {
     MonacoEditor: new () => Component<MonacoEditorProps> = require('react-monaco-editor').default;

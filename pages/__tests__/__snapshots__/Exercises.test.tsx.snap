@@ -17,10 +17,10 @@ exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
           CodeXE
         </a>
         <div
-          class="Layout__StatusWrapper-sc-19ikuwz-2 kHDkvk"
+          class="Layout__StatusWrapper-sc-19ikuwz-2 bjSJPB"
         >
           <span
-            style="padding-top: 2px;"
+            style="padding-bottom: 2px;"
           >
             Connection Status:
           </span>
@@ -56,7 +56,7 @@ exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
           class="exercises__List-sc-71g1vq-1 fMgiSC"
         >
           <div
-            class="exercises__ExerciseCard-sc-71g1vq-7 cWcEnd"
+            class="exercises__ExerciseCard-sc-71g1vq-7 kqsRiY"
           >
             <div>
               <section
@@ -98,7 +98,7 @@ exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
             </code>
           </div>
           <div
-            class="exercises__ExerciseCard-sc-71g1vq-7 cWcEnd"
+            class="exercises__ExerciseCard-sc-71g1vq-7 kqsRiY"
           >
             <div>
               <section
@@ -140,7 +140,7 @@ exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
             </code>
           </div>
           <div
-            class="exercises__ExerciseCard-sc-71g1vq-7 cWcEnd"
+            class="exercises__ExerciseCard-sc-71g1vq-7 kqsRiY"
           >
             <div>
               <section
@@ -183,7 +183,7 @@ exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
           </div>
         </section>
         <section
-          class="exercises__CreateArea-sc-71g1vq-2 iNNjwu"
+          class="exercises__CreateArea-sc-71g1vq-2 hCDKJA"
         >
           <h1>
             Create your own exercise!
@@ -209,7 +209,7 @@ exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
               Select Language
             </label>
             <select
-              class="Selector-sc-1nm0eq5-0 ipmcOS"
+              class="Selector-sc-1nm0eq5-0 hEHzPj"
               id="langselect"
             >
               <option
@@ -285,9 +285,6 @@ exports[`Exercises Page Snapshot Should match Snapshot 1`] = `
                 >
                   Placeholder code
                 </label>
-                <p>
-                  loading...
-                </p>
               </div>
               <div
                 class="exercises__NumberWrapper-sc-71g1vq-5 bOwtrs"

@@ -320,6 +320,7 @@ const CreateArea = styled.section`
         label {
             margin-top: 5px;
             margin-bottom: 5px;
+            font-weight: bold;
             font-family: ${fonts.body};
             color: white;
         }
@@ -344,7 +345,7 @@ const CreateArea = styled.section`
         input[type='text'] {
             background-color: ${colors.backgroundDark};
             border: 1px solid palevioletred;
-            padding: 4px 3px 0 3px;
+            padding: 2px;
             color: white;
             font-family: ${fonts.body};
             font-size: 1.1rem;

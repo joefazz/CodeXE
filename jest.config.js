@@ -6,9 +6,10 @@ module.exports = {
         '^.+\\.tsx?$': 'babel-jest'
     },
     moduleNameMapper: {
-        '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.ts'
+        '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.ts',
+        'monaco-editor': '<rootDir>/__mocks__/monacoMock.ts'
     },
     testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-    collectCoverage: true
+    collectCoverage: false
 };

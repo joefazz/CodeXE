@@ -24,7 +24,7 @@ export const CONTEXT_DEFAULT = {
 
 export const fonts = {
     display: "'Arvo', serif",
-    body: "'Josefin Sans', sans-serif"
+    body: "'Cantarell', sans-serif"
 };
 
 export const languageOptions: { value: string; label: string }[] = [
