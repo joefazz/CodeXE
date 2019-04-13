@@ -56,7 +56,7 @@ export function handleMessage(event: MessageEvent, currentState: any) {
                     ...currentState.response,
                     metaData: {
                         ...currentState.response.metaData,
-                        saveInfo: { timestamp: Date.now(), succeed: data.success }
+                        saveInfo: { timestamp: data.time || Date.now(), succeed: data.success }
                     }
                 }
             };

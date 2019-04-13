@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Message Receive WebSockets Code Read 1`] = `
+Object {
+  "response": Object {
+    "readData": Object {
+      "code": "// Hello",
+    },
+  },
+}
+`;
+
+exports[`Test Message Receive WebSockets Code Saved 1`] = `
+Object {
+  "response": Object {
+    "metaData": Object {
+      "saveInfo": Object {
+        "succeed": true,
+        "timestamp": 1555155949202,
+      },
+    },
+  },
+}
+`;
+
+exports[`Test Message Receive WebSockets Connect to Exercise 1`] = `
+Object {
+  "activityId": "activity_id",
+}
+`;
+
+exports[`Test Message Receive WebSockets Container Exec 1`] = `
+Object {
+  "response": Object {
+    "writeData": Object {
+      "output": "Hello World",
+    },
+  },
+}
+`;
+
+exports[`Test Message Receive WebSockets Container Pause 1`] = `
+Object {
+  "status": "idle",
+}
+`;
+
+exports[`Test Message Receive WebSockets Container Read 1`] = `
+Object {
+  "response": Object {
+    "readData": Object {
+      "code": "// Hello",
+    },
+  },
+}
+`;
+
+exports[`Test Message Receive WebSockets Container Resume 1`] = `
+Object {
+  "status": "connected",
+}
+`;
+
+exports[`Test Message Receive WebSockets Container Start 1`] = `
+Object {
+  "status": "connected",
+}
+`;
+
+exports[`Test Message Receive WebSockets Container Start 2`] = `
+Object {
+  "containerName": "Tester",
+  "id": "Tester",
+  "status": "connected",
+}
+`;
+
+exports[`Test Message Receive WebSockets Get Container Filesystem 1`] = `
+Object {
+  "response": Object {
+    "metaData": Object {
+      "tree": Array [
+        "node.js",
+      ],
+    },
+  },
+}
+`;
+
+exports[`Test Message Receive WebSockets Stop Container 1`] = `undefined`;
+
+exports[`Test Message Receive WebSockets Stop Exercise 1`] = `
+Object {
+  "activityId": "",
+}
+`;

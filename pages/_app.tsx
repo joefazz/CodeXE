@@ -2,7 +2,7 @@ import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
 import { MessageTypes } from '../@types';
-import { handleMessage } from '../functions/websockets';
+import { handleMessage } from '../functions/WebSockets';
 
 export const SocketContext = React.createContext({});
 
