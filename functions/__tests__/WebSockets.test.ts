@@ -8,18 +8,6 @@ function makeEvent(type: string, data: object | string) {
 }
 
 describe('Test Message Receive WebSockets', () => {
-    test('Container Pause', () => {
-        const MOCK_EVENT = makeEvent(MessageTypes.CONTAINER_PAUSE, {});
-
-        expect(handleMessage(MOCK_EVENT, MOCK_STATE)).toMatchSnapshot();
-    });
-
-    test('Container Resume', () => {
-        const MOCK_EVENT = makeEvent(MessageTypes.CONTAINER_RESUME, {});
-
-        expect(handleMessage(MOCK_EVENT, MOCK_STATE)).toMatchSnapshot();
-    });
-
     test('Container Start', () => {
         const MOCK_EVENT = makeEvent(MessageTypes.CONTAINER_START, {
             name: 'Tester',
@@ -31,6 +19,18 @@ describe('Test Message Receive WebSockets', () => {
         const TEMP_STATE = { containerName: '', id: '' };
 
         expect(handleMessage(MOCK_EVENT, TEMP_STATE)).toMatchSnapshot();
+    });
+    
+    test('Container Pause', () => {
+        const MOCK_EVENT = makeEvent(MessageTypes.CONTAINER_PAUSE, {});
+
+        expect(handleMessage(MOCK_EVENT, MOCK_STATE)).toMatchSnapshot();
+    });
+
+    test('Container Resume', () => {
+        const MOCK_EVENT = makeEvent(MessageTypes.CONTAINER_RESUME, {});
+
+        expect(handleMessage(MOCK_EVENT, MOCK_STATE)).toMatchSnapshot();
     });
 
     test('Container Exec', () => {

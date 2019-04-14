@@ -32,3 +32,5 @@ describe('Exercises Page Snapshot', () => {
         expect(asFragment()).toMatchSnapshot();
     });
 });
+
+describe('Create an exercise', () => {});

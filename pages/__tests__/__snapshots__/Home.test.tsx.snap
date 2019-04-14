@@ -85,7 +85,7 @@ exports[`Home Page Snapshot Should match Snapshot 1`] = `
             >
               <img
                 class="LoadingCode__VSLoader-sc-1cr3tz2-1 jFvteS"
-                src="static/images/vscode-b&w.png"
+                src="/static/images/vscode-b&w.png"
               />
               <h1
                 class="H1-sc-1otcw4s-0 krdItu"

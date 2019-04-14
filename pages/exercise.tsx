@@ -83,7 +83,7 @@ function Exercise({ exercise }: Props) {
                 type: MessageTypes.CODE_SAVE,
                 data: {
                     id: activityId,
-                    filename: exercise.entrypoint,
+                    file: exercise.entrypoint,
                     code
                 }
             })

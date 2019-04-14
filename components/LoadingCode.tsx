@@ -34,7 +34,7 @@ const VSLoader = styled.img`
 function LoadingCode() {
     return (
         <CodeLoad>
-            <VSLoader src="static/images/vscode-b&w.png" />
+            <VSLoader src="/static/images/vscode-b&w.png" />
             <H1>Loading Code...</H1>
         </CodeLoad>
     );

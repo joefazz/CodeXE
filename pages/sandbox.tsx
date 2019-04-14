@@ -15,7 +15,7 @@ function SandboxPage() {
                 type: MessageTypes.CODE_SAVE,
                 data: {
                     id,
-                    file, // this depends on lang
+                    file,
                     code
                 }
             })
