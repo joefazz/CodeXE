@@ -7,6 +7,7 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const plugins = [new MonacoWebpackPlugin()];
 module.exports = withCSS(
     withTypescript({
+        target: 'serverless',
         webpack(config) {
             config.node = {
                 fs: 'empty'
