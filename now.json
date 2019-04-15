@@ -4,8 +4,7 @@
         {
             "src": "package.json",
             "use": "@now/next",
-	    "alias": ["codexe.run", "codexe"],
-	    "regions": ["lhr1"]
-	}
+            "regions": ["lhr1"]
+        }
     ]
 }
