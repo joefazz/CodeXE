@@ -3,7 +3,9 @@
     "builds": [
         {
             "src": "package.json",
-            "use": "@now/next"
-        }
+            "use": "@now/next",
+	    "alias": ["codexe.run", "codexe"],
+	    "regions": ["lhr1"]
+	}
     ]
 }
