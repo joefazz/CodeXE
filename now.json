@@ -3,8 +3,8 @@
     "builds": [
         {
             "src": "package.json",
-            "use": "@now/next",
-            "regions": ["lhr1"]
+            "use": "@now/next"
         }
-    ]
+    ],
+    "regions": ["lhr1"]
 }
