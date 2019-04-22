@@ -52,22 +52,29 @@ function HomeWidget({ data, setters, functions }: Props) {
                         C
                     </li>
                 </LanguageWrapper>
-                {/* <div style={{ height: '45%' }}> */}
-                <Monaco
-                    data-testid="monaco"
-                    height="100%"
-                    width="100%"
-                    options={{
-                        minimap: { enabled: false },
-                        fontSize: 18,
-                        lineNumbers: 'off',
-                        cursorStyle: 'block'
+                <div
+                    style={{
+                        height: '100%',
+                        width: '100%',
+                        display: 'block',
+                        overflow: 'hidden'
                     }}
-                    language={language}
-                    onChange={(newVal: string) => setCode(newVal)}
-                    value={code}
-                />
-                {/* </div> */}
+                >
+                    <Monaco
+                        data-testid="monaco"
+                        height="100%"
+                        width="100%"
+                        options={{
+                            minimap: { enabled: false },
+                            fontSize: 18,
+                            lineNumbers: 'off',
+                            cursorStyle: 'block'
+                        }}
+                        language={language}
+                        onChange={(newVal: string) => setCode(newVal)}
+                        value={code}
+                    />
+                </div>
                 <div>
                     <Button
                         success
@@ -164,6 +171,8 @@ function HomeWidget({ data, setters, functions }: Props) {
 const Page = styled.div`
     display: grid;
     height: 100%;
+    min-width: 100vw;
+    max-width: 100vw;
     grid-gap: 10px;
     grid-template-columns: 80px 1fr 1fr;
     grid-template-rows: 5px 2fr 2fr 20px 1fr;
@@ -230,6 +239,7 @@ const ButtonArea = styled.div`
 
 const LanguageWrapper = styled.ul`
     display: grid;
+    width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
     background-color: ${colors.mainBlue};
     padding: 0;
