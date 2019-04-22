@@ -2,13 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { H1 } from '../styled/H1';
 
-type Props = {
-    isHome: boolean;
-};
-
 const CodeLoad = styled.div`
     display: flex;
-    height: ${(props: Props) => (props.isHome ? '50%' : '100%')};
+    height: 100%;
     width: 100%;
     align-items: center;
     justify-content: center;
@@ -35,9 +31,9 @@ const VSLoader = styled.img`
     }
 `;
 
-function LoadingCode(props: Props) {
+function LoadingCode(props) {
     return (
-        <CodeLoad isHome={!!props.isHome}>
+        <CodeLoad>
             <VSLoader src="/static/images/vscode-b&w.png" />
             <H1>Loading Code...</H1>
         </CodeLoad>

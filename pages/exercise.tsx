@@ -18,6 +18,7 @@ function Exercise({ exercise }: Props) {
     const [currentActivity, setCurrentActivity] = useState(exercise.activities[0]);
     const [code, setCode] = useState(currentActivity.prebakedCode || '# Python code');
     const [stream, setStream] = useState<WebSocket | string>('');
+    var entryTime = Math.round(new Date().getTime());
 
     useEffect(() => {
         console.log(socket, activityId);
@@ -46,7 +47,11 @@ function Exercise({ exercise }: Props) {
     }, [socket, activityId]);
 
     useEffect(() => {
-        if (response.metaData.saveInfo.succeed && activityId !== '') {
+        if (
+            response.metaData.saveInfo.succeed &&
+            activityId !== '' &&
+            response.metaData.saveInfo.timestamp > entryTime
+        ) {
             console.log(response);
             const repl =
                 exercise.language === Languages.JS
