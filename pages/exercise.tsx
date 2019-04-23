@@ -18,7 +18,7 @@ function Exercise({ exercise }: Props) {
     const [currentActivity, setCurrentActivity] = useState(exercise.activities[0]);
     const [code, setCode] = useState(currentActivity.prebakedCode || '# Python code');
     const [stream, setStream] = useState<WebSocket | string>('');
-    var entryTime = Math.round(new Date().getTime());
+    const [entryTime] = useState(new Date().getTime());
 
     useEffect(() => {
         console.log(socket, activityId);
