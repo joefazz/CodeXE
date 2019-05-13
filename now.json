@@ -1,5 +1,6 @@
 {
     "version": 2,
+    "alias": "codexe.run",
     "builds": [
         {
             "src": "package.json",
