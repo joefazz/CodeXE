@@ -58,7 +58,7 @@ function ExercisesWidget({ data, functions }: Props) {
             Let this be a lesson. The below technique used to work in class components
             but it doesn't work for functional (hooks). At a guess I think that the way
             useState fires a rerender is when it fails a shallow equality check and referencing
-            the array as a copy is a direct copy with the same meta _id. This used to work in 
+            the array as a copy is a direct copy with the same meta id. This used to work in 
             class components I suspect because there's a difference in how the properties of an object
             eg `this.state.activities` is treated when referenced vs just a direct `activities`
 
@@ -72,10 +72,7 @@ function ExercisesWidget({ data, functions }: Props) {
     return (
         <Page>
             <List>
-                <Link
-                    as={`/exercise/${exercises[0]._id}`}
-                    href={`/exercise?id=${exercises[0]._id}`}
-                >
+                <Link as={`/exercise/${exercises[0].id}`} href={`/exercise?id=${exercises[0].id}`}>
                     <ExerciseCard>
                         <div>
                             <WindowButtonWrapper>
@@ -94,7 +91,7 @@ function ExercisesWidget({ data, functions }: Props) {
                         </ExerciseDescription>
                     </ExerciseCard>
                 </Link>
-                <Link href={`/exercise?id=${exercises[0]._id}`}>
+                <Link href={`/exercise?id=${exercises[0].id}`}>
                     <ExerciseCard>
                         <div>
                             <WindowButtonWrapper>
@@ -113,7 +110,7 @@ function ExercisesWidget({ data, functions }: Props) {
                         </ExerciseDescription>
                     </ExerciseCard>
                 </Link>
-                <Link href={`/exercise?id=${exercises[0]._id}`}>
+                <Link href={`/exercise?id=${exercises[0].id}`}>
                     <ExerciseCard>
                         <div>
                             <WindowButtonWrapper>

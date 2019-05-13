@@ -9,8 +9,9 @@ export interface Activity {
 }
 
 export interface Exercise {
-    _id: string;
+    id: string;
     title: string;
+    slug: string;
     description: string;
     container: string;
     length: number;

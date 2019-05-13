@@ -46,7 +46,7 @@ Exercises.getInitialProps = async () => {
         .catch((err) => console.log(err));
 
     if (!json) {
-        return { exercises: [{ _id: 0 }] };
+        return { exercises: [{ id: 0 }] };
     }
 
     return { exercises: json };
