@@ -31,7 +31,7 @@ const VSLoader = styled.img`
     }
 `;
 
-function LoadingCode(props) {
+function LoadingCode() {
     return (
         <CodeLoad>
             <VSLoader src="/static/images/vscode-b&w.png" />

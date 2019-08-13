@@ -1,7 +1,7 @@
 module.exports = {
     env: {
         development: {
-            presets: ['next/babel', '@zeit/next-typescript/babel'],
+            presets: ['next/babel'],
             plugins: [
                 [
                     'styled-components',
@@ -14,7 +14,7 @@ module.exports = {
             ]
         },
         production: {
-            presets: ['next/babel', '@zeit/next-typescript/babel'],
+            presets: ['next/babel'],
             plugins: [
                 [
                     'styled-components',
@@ -29,7 +29,6 @@ module.exports = {
         test: {
             presets: [
                 ['next/babel', { 'preset-env': { modules: 'commonjs' } }],
-                '@zeit/next-typescript/babel'
             ],
             plugins: [
                 [

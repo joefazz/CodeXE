@@ -119,15 +119,15 @@ function SandboxWidget({ data, functions }: Props) {
     );
 }
 
-const Controls = styled.div`
-    display: flex;
-    background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
-    height: 100%;
-    width: 100%;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-direction: row;
-`;
+// const Controls = styled.div`
+//     display: flex;
+//     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
+//     height: 100%;
+//     width: 100%;
+//     align-items: center;
+//     justify-content: space-evenly;
+//     flex-direction: row;
+// `;
 
 // const ControlArea = styled.div`
 //     display: flex;

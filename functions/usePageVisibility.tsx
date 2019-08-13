@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 function usePageVisibility(onHidden: () => void, onVisible: () => void, dependancies: unknown[]) {
     const visibilityChange = 'visibilitychange';

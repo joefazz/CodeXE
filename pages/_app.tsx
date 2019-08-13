@@ -1,7 +1,6 @@
-import App, { Container, NextAppContext } from 'next/app';
+import App, { Container, AppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
-import { MessageTypes } from '../@types';
 import { handleMessage } from '../functions/WebSockets';
 
 export const SocketContext = React.createContext({});
@@ -10,7 +9,7 @@ export default class MyApp extends App {
     containerInfo: any;
     socket: WebSocket;
 
-    static async getInitialProps({ Component, ctx }: NextAppContext) {
+    static async getInitialProps({ Component, ctx }: AppContext) {
         let pageProps = {};
 
         if (Component.getInitialProps) {

@@ -1,10 +1,8 @@
 import React, { useContext, ReactChild } from 'react';
 import Link from 'next/link';
 import '../css/App.css';
-import { Button } from '../styled/Button';
 import { Logo } from '../styled/Logo';
 import { Header } from '../styled/Header';
-import { Avatar } from '../styled/Avatar';
 import { NavLink } from '../styled/NavLink';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 const Monaco: any = dynamic(import('../../components/Monaco') as any, {
     ssr: false,
-    loading: () => <LoadingCode isHome />
+    loading: () => <LoadingCode />
 });
 import { CodeOutput } from '../../styled/CodeOutput';
 import { Button } from '../../styled/Button';

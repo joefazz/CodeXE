@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Terminal } from 'xterm';
 
 Object.defineProperty(exports, '__esModule', { value: true });

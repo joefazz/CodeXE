@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { QueryStringMapObject } from 'next';
+import { NextPageContext } from 'next';
 import fetch from 'isomorphic-unfetch';
 import { SocketContext } from './_app';
 import { Context, MessageTypes, Languages, Response } from '../@types';
@@ -115,8 +115,8 @@ function Exercise({ exercise }: Props) {
     );
 }
 
-Exercise.getInitialProps = async ({ query }: { query: QueryStringMapObject }) => {
-    const json = await fetch(`http://localhost:4000/exercise?id=${query.id}`)
+Exercise.getInitialProps = async (ctx: NextPageContext) => {
+    const json = await fetch(`http://localhost:4000/exercise?id=${ctx.query.id}`)
         .then((res) => res.json())
         .catch((err) => console.log(err));
 

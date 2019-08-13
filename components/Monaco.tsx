@@ -1,5 +1,5 @@
 import { MonacoEditorProps, MonacoEditorBaseProps } from 'react-monaco-editor';
-import { Component, ErrorInfo } from 'react';
+import { Component } from 'react';
 
 class Monaco extends Component<MonacoEditorBaseProps> {
     MonacoEditor: new () => Component<MonacoEditorProps> = require('react-monaco-editor').default;
@@ -19,7 +19,8 @@ class Monaco extends Component<MonacoEditorBaseProps> {
     };
 
     componentDidMount() {
-        this.resizeListener = window.addEventListener('resize', (evt) => {
+        // This passes an event with the window event object
+        this.resizeListener = window.addEventListener('resize', () => {
             if (this.resizeTaskId !== null) {
                 clearTimeout(this.resizeTaskId);
             }
@@ -32,7 +33,8 @@ class Monaco extends Component<MonacoEditorBaseProps> {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', (evt) => {
+        // This passes an event with the window event object
+        window.removeEventListener('resize', () => {
             if (this.resizeTaskId !== null) {
                 clearTimeout(this.resizeTaskId);
             }

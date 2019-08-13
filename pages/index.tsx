@@ -4,10 +4,6 @@ import { SocketContext } from '../pages/_app';
 import { Context, Languages, MessageTypes } from '../@types';
 import { runCode } from '../functions/run_code';
 import HomeWidget from '../screens/home';
-import Media from 'react-media';
-import styled from 'styled-components';
-import { colors, fonts } from '../constants';
-import { H1 } from '../styled/H1';
 
 function HomePage() {
     const { socket, id, containerName, response } = useContext(SocketContext) as Context;
@@ -93,33 +89,33 @@ function HomePage() {
     );
 }
 
-const MobilePage = styled.div`
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
+// const MobilePage = styled.div`
+//     width: 100vw;
+//     height: 100vh;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     background: ${colors.backgroundBlue} url('/static/images/stars.png') 50%;
 
-    div {
-        width: 90%;
-        height: 90%;
-        padding: 7px;
-        background-color: ${colors.backgroundDark};
-        border-radius: 6px;
-        box-shadow: 2px 2px 4px black;
+//     div {
+//         width: 90%;
+//         height: 90%;
+//         padding: 7px;
+//         background-color: ${colors.backgroundDark};
+//         border-radius: 6px;
+//         box-shadow: 2px 2px 4px black;
 
-        p {
-            color: white;
-            font-family: ${fonts.body};
-            font-size: 16px;
-        }
+//         p {
+//             color: white;
+//             font-family: ${fonts.body};
+//             font-size: 16px;
+//         }
 
-        iframe {
-            width: 100%;
-            height: 60%;
-        }
-    }
-`;
+//         iframe {
+//             width: 100%;
+//             height: 60%;
+//         }
+//     }
+// `;
 
 export default HomePage;
