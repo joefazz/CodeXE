@@ -16,7 +16,7 @@
         "express": "4.17.1",
         "isomorphic-unfetch": "3.0.0",
         "monaco-editor-webpack-plugin": "1.7.0",
-        "next": "9.0.3",
+        "next": "11.1.0",
         "react": "16.9.0",
         "react-dom": "16.9.0",
         "react-media": "1.9.2",
