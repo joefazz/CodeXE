@@ -13,7 +13,7 @@
         "@types/react-monaco-editor": "0.16.0",
         "@types/styled-components": "^4.1.15",
         "@zeit/next-css": "1.0.1",
-        "express": "4.17.1",
+        "express": "4.17.3",
         "isomorphic-unfetch": "3.0.0",
         "monaco-editor-webpack-plugin": "1.7.0",
         "next": "9.0.3",
